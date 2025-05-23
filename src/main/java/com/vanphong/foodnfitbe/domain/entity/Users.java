@@ -2,20 +2,25 @@ package com.vanphong.foodnfitbe.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class users {
+public class Users {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
+    @UuidGenerator
+    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
     @Column(name = "email")
@@ -25,10 +30,10 @@ public class users {
     private String passwordHash;
 
     @Column(name = "fullname")
-    private String fullName;
+    private String fullname;
 
     @Column(name = "gender", nullable = false)
-    private Boolean gender;
+    private boolean gender;
 
     @Column(name = "birthday")
     private LocalDate birthday;
@@ -43,5 +48,14 @@ public class users {
     private LocalDate updatedDate;
 
     @Column(name = "is_active", nullable = false)
-    private Boolean isActive;
+    private boolean isActive;
+
+    @Column(name = "is_block", nullable = false)
+    private boolean isBlock;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Feedback> feedbackList;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserHistory> histories;
 }
