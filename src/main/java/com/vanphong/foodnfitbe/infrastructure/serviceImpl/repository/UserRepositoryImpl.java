@@ -18,6 +18,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Optional<Users> findByEmail(String email) {
+        return jpaUserRepository.findByEmail(email);
+    }
+
+    @Override
     public Users saveUser(Users user) {
         return jpaUserRepository.save(user);
     }

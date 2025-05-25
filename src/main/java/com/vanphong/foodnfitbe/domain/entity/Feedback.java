@@ -21,8 +21,8 @@ public class Feedback {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private Users user;
 
     @Column(name = "message", columnDefinition = "text")
@@ -30,12 +30,6 @@ public class Feedback {
 
     @Column(name = "submitted_at")
     private LocalDateTime submittedAt;
-
-    @Column(name = "admin_id")
-    private UUID adminId;
-
-    @Column(name = "answer", columnDefinition = "text")
-    private String answer;
 
     @Column(name = "purpose", columnDefinition = "text")
     private String purpose;

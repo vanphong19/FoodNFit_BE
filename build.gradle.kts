@@ -39,9 +39,12 @@ dependencies {
 	implementation("io.github.cdimascio:dotenv-java:3.1.0")
 	implementation("org.springframework.boot:spring-boot-starter-mail")
 	implementation("com.google.cloud:google-cloud-translate:2.60.0")
-	//implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.security:spring-security-crypto")
-
+	implementation("org.apache.httpcomponents:fluent-hc:4.5.13")
+	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
 }
 
 tasks.withType<Test> {

@@ -14,8 +14,8 @@ public class FoodItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "name")
-    private String name;
+    @Column(name = "name_en")
+    private String nameEn;
     @Column(name = "calories")
     private Double calories;
     @Column(name = "protein")
@@ -29,11 +29,18 @@ public class FoodItem {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "serving_size")
-    private String servingSize;
+    @Column(name = "serving_size_en")
+    private String servingSizeEn;
 
-    @Column(name = "recipe")
-    private String recipe;
+    @Column(name = "recipe_en")
+    private String recipeEn;
+
+    @Column(name = "name_vi")
+    private String nameVi;
+    @Column(name = "recipe_vi")
+    private String recipeVi;
+    @Column(name = "serving_size_vi")
+    private String servingSizeVi;
 
     @Column(name = "food_type_id")
     private Integer foodTypeId;

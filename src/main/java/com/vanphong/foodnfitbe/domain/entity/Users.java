@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,6 +53,12 @@ public class Users {
 
     @Column(name = "is_block", nullable = false)
     private boolean isBlock;
+
+    @Column(name = "is_verified", nullable = false)
+    private boolean isVerified;
+
+    @Column(name = "is_admin", nullable = false)
+    private boolean isAdmin;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Feedback> feedbackList;
