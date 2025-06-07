@@ -1,14 +1,20 @@
-# Dùng JDK 21 vì bạn đã cấu hình trong build.gradle.kts
+# ------------------ Stage 1: Build JAR ------------------
+FROM gradle:8.5-jdk21 AS build
+
+WORKDIR /app
+COPY . .
+
+# Build JAR (Gradle Kotlin DSL compatible)
+RUN gradle build --no-daemon
+
+# ------------------ Stage 2: Run JAR --------------------
 FROM eclipse-temurin:21-jdk
 
-# Đặt thư mục làm việc trong container
 WORKDIR /app
 
-# Copy file jar từ máy vào container
-COPY build/libs/FoodNFitBE-0.0.1-SNAPSHOT.jar app.jar
+# Copy đúng file JAR đã build
+COPY --from=build /app/build/libs/FoodNFitBE-0.0.1-SNAPSHOT.jar app.jar
 
-# Expose port cho Render
 EXPOSE 8080
 
-# Chạy ứng dụng
 ENTRYPOINT ["java", "-jar", "app.jar"]
