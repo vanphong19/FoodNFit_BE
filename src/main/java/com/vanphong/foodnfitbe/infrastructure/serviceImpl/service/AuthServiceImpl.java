@@ -5,7 +5,7 @@ import com.vanphong.foodnfitbe.application.service.JwtService;
 import com.vanphong.foodnfitbe.application.service.MailService;
 import com.vanphong.foodnfitbe.application.service.OtpStorageService;
 import com.vanphong.foodnfitbe.domain.entity.Users;
-import com.vanphong.foodnfitbe.infrastructure.jpaRepository.JpaUserRepository;
+import com.vanphong.foodnfitbe.infrastructure.jpaRepository.UserJpaRepository;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.LoginRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.OtpVerificationRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.RegisterRequest;
@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Random;
 
 @Service
@@ -25,7 +24,7 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
-    private final JpaUserRepository repo;
+    private final UserJpaRepository repo;
     private final JwtService jwtService;
     private final MailService mailService;
     private final OtpStorageService otpStorageService;
@@ -39,7 +38,8 @@ public class AuthServiceImpl implements AuthService {
 
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
-        return new AuthResponse(accessToken, refreshToken, user.getId());
+        String role = user.isAdmin() ? "ADMIN" : "USER";
+        return new AuthResponse(accessToken, refreshToken, user.getId(), role);
     }
 
     @Override
@@ -58,9 +58,9 @@ public class AuthServiceImpl implements AuthService {
                 .createdDate(LocalDate.now())
                 .updatedDate(LocalDate.now())
                 .gender(false)           // hoặc true tùy logic
-                .isActive(true)
+                .active(true)
                 .isVerified(false)
-                .isBlock(false)
+                .blocked(false)
                 .build();
         repo.save(user);
         otpStorageService.storeOtp(user.getEmail(), otp, OtpStorageService.OTP_EXPIRE_MINUTES);

@@ -1,14 +1,13 @@
 package com.vanphong.foodnfitbe.presentation.viewmodel.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 public class FoodItemRequest {
     private String nameEn;
     private Double calories;

@@ -49,10 +49,10 @@ public class Users {
     private LocalDate updatedDate;
 
     @Column(name = "is_active", nullable = false)
-    private boolean isActive;
+    private boolean active;
 
     @Column(name = "is_block", nullable = false)
-    private boolean isBlock;
+    private boolean blocked;
 
     @Column(name = "is_verified", nullable = false)
     private boolean isVerified;
@@ -65,4 +65,7 @@ public class Users {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserHistory> histories;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserProfiles> userProfiles;
 }

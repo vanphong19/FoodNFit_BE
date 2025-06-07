@@ -14,7 +14,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class Feedback {
-
     @Id
     @GeneratedValue
     @UuidGenerator

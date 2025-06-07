@@ -1,8 +1,12 @@
 package com.vanphong.foodnfitbe.domain.repository;
 
 import com.vanphong.foodnfitbe.domain.entity.Users;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,6 +16,8 @@ public interface UserRepository {
     Optional<Users> findByEmail(String email);
     Users saveUser(Users user);
     Optional<Users> findUser(UUID id);
-    List<Users> findAllUsers();
+    Page<Users> findAllUsers(Specification<Users> specification, PageRequest pageRequest);
     void deleteUser(UUID id);
+    Long countUsersByMonth(LocalDate from, LocalDate to);
+    Long countUsers();
 }

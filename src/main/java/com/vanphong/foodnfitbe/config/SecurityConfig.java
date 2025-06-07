@@ -16,44 +16,33 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // 👉 Cho phép gọi tất cả các API không cần xác thực
-                )
-                .csrf(AbstractHttpConfigurer::disable);
-        return http.build();
-    }
-
 //    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 //        http
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 //                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(
-//                                "/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**","/api/**"
-//                        ).permitAll()
-//
-//                        .requestMatchers("/api/**")
-//                        .access((authentication, context) -> {
-//                            var authenticationObj = authentication.get();
-//
-//                            // Nếu đã login thì kiểm tra quyền
-//                            if (authenticationObj != null && authenticationObj.isAuthenticated()) {
-//                                boolean hasRole = context.getRequest().isUserInRole("USER") || context.getRequest().isUserInRole("ADMIN");
-//                                return new AuthorizationDecision(hasRole);
-//                            }
-//
-//                            // Nếu chưa login → vẫn cho phép test
-//                            return new AuthorizationDecision(true);
-//                        })
-//
-//                        .anyRequest().authenticated()
+//                        .anyRequest().permitAll() // 👉 Cho phép gọi tất cả các API không cần xác thực
 //                )
-//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-//
+//                .csrf(AbstractHttpConfigurer::disable);
 //        return http.build();
 //    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**","/api/**").permitAll()
+
+                        // Các API cụ thể cần phân quyền:
+                        .requestMatchers("/api/user/update/**", "/api/user/lock/**").hasRole("ADMIN")
+                        .requestMatchers("/api/user/getById/**", "/api/user/getAll", "/api/feedback/**","/api/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/api/user/create").hasRole("ADMIN")  // Tùy logic
+
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
 }

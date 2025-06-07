@@ -1,9 +1,10 @@
 package com.vanphong.foodnfitbe.infrastructure.serviceImpl.service;
 
 import com.vanphong.foodnfitbe.application.service.TranslateService;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.utils.URIBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
@@ -11,12 +12,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Slf4j
 @Service
 public class TranslateServiceImpl implements TranslateService {
 
     // Simple in-memory cache để giảm gọi lại với chuỗi giống nhau
     private final Map<String, String> cache = new ConcurrentHashMap<>();
+    private static final Logger log = LoggerFactory.getLogger(TranslateServiceImpl.class);
 
     @Override
     public String translateToVietnamese(String text) {

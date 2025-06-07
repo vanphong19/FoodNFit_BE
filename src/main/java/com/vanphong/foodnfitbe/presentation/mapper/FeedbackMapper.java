@@ -6,6 +6,8 @@ import com.vanphong.foodnfitbe.presentation.viewmodel.response.FeedbackResponse;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class FeedbackMapper {
@@ -27,5 +29,9 @@ public class FeedbackMapper {
                 .inquiry(feedback.getInquiry())
                 .submittedAt(feedback.getSubmittedAt())
                 .build();
+    }
+
+    public List<FeedbackResponse> toResponses(List<Feedback> feedbacks) {
+        return feedbacks.stream().map(this::toResponse).collect(Collectors.toList());
     }
 }

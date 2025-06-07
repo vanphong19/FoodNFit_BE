@@ -36,7 +36,7 @@ dependencies {
     implementation("com.cloudinary:cloudinary-http44:1.39.0")
     implementation("com.google.firebase:firebase-admin:9.3.0")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
-	implementation("io.github.cdimascio:dotenv-java:3.1.0")
+	implementation("me.paulschwarz:spring-dotenv:4.0.0")
 	implementation("org.springframework.boot:spring-boot-starter-mail")
 	implementation("com.google.cloud:google-cloud-translate:2.60.0")
 	implementation("org.springframework.boot:spring-boot-starter-security")
@@ -45,6 +45,9 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
+	implementation("net.logstash.logback:logstash-logback-encoder:7.4")
+	implementation("com.google.auth:google-auth-library-oauth2-http:1.17.0")
+	implementation("org.json:json:20240303")
 }
 
 tasks.withType<Test> {

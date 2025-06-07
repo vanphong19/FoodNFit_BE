@@ -5,19 +5,21 @@ import com.vanphong.foodnfitbe.domain.entity.UserHistory;
 import com.vanphong.foodnfitbe.domain.entity.Users;
 import com.vanphong.foodnfitbe.domain.repository.UserHistoryRepository;
 import com.vanphong.foodnfitbe.domain.repository.UserRepository;
-import com.vanphong.foodnfitbe.infrastructure.jpaRepository.UserHistoryJpaRepository;
+import com.vanphong.foodnfitbe.domain.specification.UserSpecification;
 import com.vanphong.foodnfitbe.presentation.mapper.UserMapper;
+import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserSearchCriteria;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.UserResponse;
-import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.YearMonth;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -92,9 +94,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponse> getAllUsers() {
-        List<Users> users = userRepository.findAllUsers();
-        return userMapper.toResponseList(users);
+    public Page<UserResponse> getAllUsers(UserSearchCriteria criteria) {
+        int page = criteria.getPage() != null && criteria.getPage() > 0 ? criteria.getPage() - 1: 0;
+        int size = criteria.getSize() != null && criteria.getSize() > 0 ? criteria.getSize() : 10;
+
+        String sortBy = criteria.getSortBy() != null ? criteria.getSortBy() : "id";
+        Sort.Direction direction = "desc".equalsIgnoreCase(criteria.getSortDir()) ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, sortBy));
+
+        Specification<Users> spec = UserSpecification.getUsersByCriteria(criteria);
+        return userRepository.findAllUsers(spec, pageRequest).map(userMapper::toResponse);
     }
 
     @Override
@@ -135,9 +145,35 @@ public class UserServiceImpl implements UserService {
                 .changedAt(LocalTime.now())
                 .build());
 
-        boolean curStatus = user.isBlock();
+        boolean curStatus = user.isBlocked();
         boolean newStatus = !curStatus;
-        user.setBlock(newStatus);
+        user.setBlocked(newStatus);
         return userMapper.toResponse(userRepository.saveUser(user));
+    }
+
+    @Override
+    public Long countUsersCreateAtLastMonth() {
+        YearMonth thisMonth = YearMonth.now();
+        YearMonth lastMonth = thisMonth.minusMonths(1);
+
+        LocalDate startOfLastMonth = lastMonth.atDay(1);
+        LocalDate endOfLastMonth = lastMonth.atEndOfMonth();
+
+        return userRepository.countUsersByMonth(startOfLastMonth, endOfLastMonth);
+    }
+
+    @Override
+    public Long countUsers() {
+        return userRepository.countUsers();
+    }
+
+    @Override
+    public Long countUsersCreateAtThisMonth() {
+        YearMonth thisMonth = YearMonth.now();
+
+        LocalDate startOfMonth = thisMonth.atDay(1);
+        LocalDate endOfMonth = thisMonth.atEndOfMonth();
+
+        return userRepository.countUsersByMonth(startOfMonth, endOfMonth);
     }
 }

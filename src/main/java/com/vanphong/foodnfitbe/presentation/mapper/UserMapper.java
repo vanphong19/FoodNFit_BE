@@ -20,8 +20,8 @@ public class UserMapper {
                 .gender(userRequest.isGender())
                 .avatarUrl(userRequest.getAvatarUrl())
                 .birthday(userRequest.getBirthday())
-                .isActive(true)
-                .isBlock(false)
+                .active(true)
+                .blocked(false)
                 .build();
     }
 
@@ -34,7 +34,7 @@ public class UserMapper {
                 .avatarUrl(user.getAvatarUrl())
                 .birthday(user.getBirthday())
                 .active(user.isActive())
-                .blocked(user.isBlock())
+                .blocked(user.isBlocked())
                 .history(user.getHistories() != null ?
                         user.getHistories().stream()
                                 .map(this::toHistoryResponse)

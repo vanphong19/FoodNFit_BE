@@ -5,6 +5,8 @@ import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.UUID;
 
@@ -27,5 +29,18 @@ public class CurrentUser {
         String token = header.substring(7);
         Claims claims = jwtService.extractAllClaims(token);
         return claims.get("role", String.class); // "USER" hoặc "ADMIN"
+    }
+
+    // Dùng trong service: không cần truyền request
+    public UUID getCurrentUserId() {
+        HttpServletRequest request = ((ServletRequestAttributes)
+                RequestContextHolder.currentRequestAttributes()).getRequest();
+        return getUserId(request);
+    }
+
+    public String getCurrentUserRole() {
+        HttpServletRequest request = ((ServletRequestAttributes)
+                RequestContextHolder.currentRequestAttributes()).getRequest();
+        return getUserRole(request);
     }
 }
