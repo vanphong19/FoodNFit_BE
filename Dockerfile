@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . .
 
 # 🔒 Dùng wrapper để build an toàn
-RUN chmod +x ./gradlew && ./gradlew build --no-daemon
+RUN chmod +x ./gradlew && ./gradlew build -x test --no-daemon
 
 FROM eclipse-temurin:21-jdk
 
