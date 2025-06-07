@@ -1,18 +1,15 @@
-# ------------------ Stage 1: Build JAR ------------------
 FROM gradle:8.5-jdk21 AS build
 
 WORKDIR /app
 COPY . .
 
-# Build JAR (Gradle Kotlin DSL compatible)
-RUN gradle build --no-daemon
+# 🔒 Dùng wrapper để build an toàn
+RUN chmod +x ./gradlew && ./gradlew build --no-daemon
 
-# ------------------ Stage 2: Run JAR --------------------
 FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
 
-# Copy đúng file JAR đã build
 COPY --from=build /app/build/libs/FoodNFitBE-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
