@@ -26,4 +26,8 @@ public class FeedbackController {
         List<FeedbackResponse> feedbackResponse = feedbackService.getAllFeedback();
         return ResponseEntity.ok(feedbackResponse);
     }
+    @GetMapping("/count")
+    public ResponseEntity<Long> getFeedbackCount() {
+        return ResponseEntity.ok(feedbackService.countAllFeedback());
+    }
 }

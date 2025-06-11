@@ -10,4 +10,5 @@ public interface FeedbackRepository {
     Feedback save(Feedback feedback);
     Optional<Feedback> findById(UUID id);
     List<Feedback> findAll();
+    Long count();
 }

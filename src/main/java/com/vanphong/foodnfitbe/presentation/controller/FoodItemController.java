@@ -84,7 +84,7 @@ public class FoodItemController {
         }
     }
 
-    @GetMapping("count-this-month")
+    @GetMapping("/count-this-month")
     public ResponseEntity<Long> getFoodCountThisMonth() {
         Long count = foodItemService.countFoodCreatedThisMonth();
         return ResponseEntity.ok(count);

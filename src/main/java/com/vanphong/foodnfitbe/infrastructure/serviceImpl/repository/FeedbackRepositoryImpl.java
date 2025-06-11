@@ -27,4 +27,9 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
     public List<Feedback> findAll() {
         return feedbackJpaRepository.findAll();
     }
+
+    @Override
+    public Long count() {
+        return feedbackJpaRepository.count();
+    }
 }

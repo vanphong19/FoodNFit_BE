@@ -46,4 +46,9 @@ public class FeedbackServiceImpl implements FeedbackService {
         List<Feedback> feedbacks = feedbackRepository.findAll();
         return feedbackMapper.toResponses(feedbacks);
     }
+
+    @Override
+    public Long countAllFeedback() {
+        return feedbackRepository.count();
+    }
 }

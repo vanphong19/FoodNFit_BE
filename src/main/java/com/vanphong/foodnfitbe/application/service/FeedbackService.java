@@ -8,4 +8,5 @@ import java.util.List;
 public interface FeedbackService {
     FeedbackResponse createFeedback(FeedbackRequest feedbackRequest);
     List<FeedbackResponse> getAllFeedback();
+    Long countAllFeedback();
 }
