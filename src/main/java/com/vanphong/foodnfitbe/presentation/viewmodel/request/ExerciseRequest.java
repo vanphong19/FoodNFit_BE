@@ -25,5 +25,5 @@ public class ExerciseRequest {
     private Integer restTimeSeconds;
     private String note;
     private String exerciseType;
-    private Boolean isActive;
+    private Boolean active;
 }

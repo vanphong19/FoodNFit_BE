@@ -5,6 +5,7 @@ import com.vanphong.foodnfitbe.domain.entity.Exercise;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,4 +16,6 @@ public interface ExerciseRepository {
     Optional<Exercise> findExerciseById(Integer id);
     void delete(Exercise exercise);
     List<Exercise> searchExercise(String keyword);
+    Long count();
+    Long countExercisesCreatedThisMonth(LocalDate from, LocalDate to);
 }

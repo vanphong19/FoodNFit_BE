@@ -48,6 +48,9 @@ dependencies {
 	implementation("net.logstash.logback:logstash-logback-encoder:7.4")
 	implementation("com.google.auth:google-auth-library-oauth2-http:1.17.0")
 	implementation("org.json:json:20240303")
+	implementation("org.apache.httpcomponents.client5:httpclient5")
+	implementation("com.fasterxml.jackson.core:jackson-databind")
+
 }
 
 tasks.withType<Test> {

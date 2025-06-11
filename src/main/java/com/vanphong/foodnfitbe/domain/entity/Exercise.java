@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "exercise")
@@ -59,5 +60,7 @@ public class Exercise {
     private String exerciseType;
 
     @Column(name = "is_active")
-    private Boolean isActive;
+    private Boolean active;
+    @Column(name = "created_date")
+    private LocalDate createdDate;
 }

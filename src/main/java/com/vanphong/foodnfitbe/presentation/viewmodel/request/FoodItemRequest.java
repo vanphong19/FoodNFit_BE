@@ -18,4 +18,5 @@ public class FoodItemRequest {
     private String servingSizeEn;
     private String recipeEn;
     private Integer foodTypeId;
+    private String ingredientsEn;
 }

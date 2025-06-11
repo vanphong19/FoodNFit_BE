@@ -53,4 +53,14 @@ public class ExerciseController {
         List<ExerciseResponse> response = exerciseService.searchExercise(keyword);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("count")
+    public ResponseEntity<Long> count() {
+        return ResponseEntity.ok(exerciseService.countExercises());
+    }
+
+    @GetMapping("count-this-month")
+    public ResponseEntity<Long> countThisMonth() {
+        return ResponseEntity.ok(exerciseService.countExerciseCreatedAThisMonth());
+    }
 }

@@ -6,6 +6,7 @@ import com.vanphong.foodnfitbe.infrastructure.jpaRepository.FoodItemJpaRepositor
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,5 +27,20 @@ public class FoodItemRepositoryImpl implements FoodItemRepository {
     @Override
     public FoodItem save(FoodItem foodItem) {
         return foodItemJpaRepository.save(foodItem);
+    }
+
+    @Override
+    public Boolean existsById(Integer id) {
+        return foodItemJpaRepository.existsById(id);
+    }
+
+    @Override
+    public Long count() {
+        return foodItemJpaRepository.count();
+    }
+
+    @Override
+    public Long countFoodCreatedThisMonth(LocalDate from, LocalDate to) {
+        return foodItemJpaRepository.countByCreatedDateBetweenAndActiveTrue(from, to);
     }
 }

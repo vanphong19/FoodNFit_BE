@@ -25,7 +25,9 @@ public class FoodItemMapper {
                 .recipeEn(foodItem.getRecipeEn())
                 .recipeVi(foodItem.getRecipeVi())
                 .foodTypeId(foodItem.getFoodTypeId())
-                .isActive(foodItem.getIsActive())
+                .active(foodItem.getActive())
+                .ingredientsEn(foodItem.getIngredientsEn())
+                .createdDate(foodItem.getCreatedDate())
                 .build();
     }
     public List<FoodItemResponse> toResponses(List<FoodItem> foodItems) {

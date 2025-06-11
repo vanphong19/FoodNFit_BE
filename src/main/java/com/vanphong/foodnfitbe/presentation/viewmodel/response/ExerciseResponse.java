@@ -24,5 +24,5 @@ public class ExerciseResponse {
     private Integer restTimeSeconds;
     private String note;
     private String type;
-    private Boolean isActive;
+    private Boolean active;
 }

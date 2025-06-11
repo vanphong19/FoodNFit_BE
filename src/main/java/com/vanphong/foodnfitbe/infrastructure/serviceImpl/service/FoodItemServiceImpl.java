@@ -12,6 +12,8 @@ import jdk.jfr.Registered;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -41,7 +43,7 @@ public class FoodItemServiceImpl implements FoodItemService {
                 .protein(request.getProtein())
                 .imageUrl(request.getImageUrl())
                 .foodTypeId(request.getFoodTypeId())
-                .isActive(true)
+                .active(true)
                 .build();
 
         FoodItem savedFoodItem = foodItemRepository.save(foodItem);
@@ -87,5 +89,15 @@ public class FoodItemServiceImpl implements FoodItemService {
     @Override
     public Optional<FoodItemResponse> getFoodItemById(Integer id) {
         return Optional.empty();
+    }
+
+    @Override
+    public Long countFoodCreatedThisMonth() {
+        YearMonth thisMonth = YearMonth.now();
+
+        LocalDate startOfMonth = thisMonth.atDay(1);
+        LocalDate endOfMonth = thisMonth.atEndOfMonth();
+
+        return foodItemRepository.countFoodCreatedThisMonth(startOfMonth, endOfMonth);
     }
 }

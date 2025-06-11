@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,5 +27,7 @@ public class FoodItemResponse {
     private String recipeVi;
     private String servingSizeVi;
     private Integer foodTypeId;
-    private Boolean isActive;
+    private Boolean active;
+    private String ingredientsEn;
+    private LocalDate createdDate;
 }

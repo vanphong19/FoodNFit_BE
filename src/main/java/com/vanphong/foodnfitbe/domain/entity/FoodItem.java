@@ -3,6 +3,9 @@ package com.vanphong.foodnfitbe.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 @Entity
 @Table(name = "food_item")
 @NoArgsConstructor
@@ -42,10 +45,15 @@ public class FoodItem {
     @Column(name = "serving_size_vi")
     private String servingSizeVi;
 
+    @Column(name = "ingredients_en")
+    private String ingredientsEn;
+
     @Column(name = "food_type_id")
     private Integer foodTypeId;
 
     @Column(name = "is_active")
-    private Boolean isActive;
+    private Boolean active;
 
+    @Column(name = "created_date")
+    private LocalDate createdDate;
 }

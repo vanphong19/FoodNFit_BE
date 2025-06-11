@@ -6,6 +6,7 @@ import com.vanphong.foodnfitbe.infrastructure.jpaRepository.ExerciseJpaRepositor
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +38,16 @@ public class ExerciseRepositoryImpl implements ExerciseRepository {
     @Override
     public List<Exercise> searchExercise(String keyword) {
         return exerciseJpaRepository.findByExerciseNameContainingIgnoreCase(keyword);
+    }
+
+    @Override
+    public Long count() {
+        return exerciseJpaRepository.count();
+    }
+
+    @Override
+    public Long countExercisesCreatedThisMonth(LocalDate from, LocalDate to) {
+        return exerciseJpaRepository.countByCreatedDateBetweenAndActiveTrue(from, to);
     }
 
 }

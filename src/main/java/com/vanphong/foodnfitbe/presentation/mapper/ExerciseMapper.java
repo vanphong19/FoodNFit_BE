@@ -24,7 +24,7 @@ public class ExerciseMapper {
                 .restTimeSeconds(request.getRestTimeSeconds())
                 .note(request.getNote())
                 .exerciseType(request.getExerciseType())
-                .isActive(request.getIsActive())
+                .active(request.getActive())
                 .build();
     }
 
@@ -45,7 +45,7 @@ public class ExerciseMapper {
                 .restTimeSeconds(exercise.getRestTimeSeconds())
                 .note(exercise.getNote())
                 .type(exercise.getExerciseType())
-                .isActive(exercise.getIsActive())
+                .active(exercise.getActive())
                 .build();
     }
 

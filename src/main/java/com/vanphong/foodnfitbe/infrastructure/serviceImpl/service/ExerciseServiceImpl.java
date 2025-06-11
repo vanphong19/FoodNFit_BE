@@ -9,6 +9,8 @@ import com.vanphong.foodnfitbe.presentation.viewmodel.response.ExerciseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,7 +62,7 @@ public class ExerciseServiceImpl implements ExerciseService {
         existing.setRestTimeSeconds(request.getRestTimeSeconds());
         existing.setNote(request.getNote());
         existing.setExerciseType(request.getExerciseType());
-        existing.setIsActive(request.getIsActive());
+        existing.setActive(request.getActive());
 
         Exercise updated = exerciseRepository.saveExercise(existing);
         return ExerciseMapper.toResponse(updated);
@@ -86,5 +88,20 @@ public class ExerciseServiceImpl implements ExerciseService {
     public List<ExerciseResponse> searchExercise(String keyword) {
         List<Exercise> list = exerciseRepository.searchExercise(keyword);
         return ExerciseMapper.toResponses(list);
+    }
+
+    @Override
+    public Long countExercises() {
+        return exerciseRepository.count();
+    }
+
+    @Override
+    public Long countExerciseCreatedAThisMonth() {
+        YearMonth thisMonth = YearMonth.now();
+
+        LocalDate startOfMonth = thisMonth.atDay(1);
+        LocalDate endOfMonth = thisMonth.atEndOfMonth();
+
+        return exerciseRepository.countExercisesCreatedThisMonth(startOfMonth, endOfMonth);
     }
 }
