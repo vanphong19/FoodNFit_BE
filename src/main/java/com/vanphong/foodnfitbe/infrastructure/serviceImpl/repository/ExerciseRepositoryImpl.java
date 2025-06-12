@@ -3,7 +3,9 @@ package com.vanphong.foodnfitbe.infrastructure.serviceImpl.repository;
 import com.vanphong.foodnfitbe.domain.entity.Exercise;
 import com.vanphong.foodnfitbe.domain.repository.ExerciseRepository;
 import com.vanphong.foodnfitbe.infrastructure.jpaRepository.ExerciseJpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -22,9 +24,11 @@ public class ExerciseRepositoryImpl implements ExerciseRepository {
     }
 
     @Override
-    public List<Exercise> findAllExercises() {
-        return exerciseJpaRepository.findAllExercises();
+    public Page<Exercise> findAllExercises(Specification<Exercise> specification, PageRequest pageRequest) {
+        return exerciseJpaRepository.findAll(specification, pageRequest);
     }
+
+
     @Override
     public Optional<Exercise> findExerciseById(Integer id) {
         return exerciseJpaRepository.findById(id);

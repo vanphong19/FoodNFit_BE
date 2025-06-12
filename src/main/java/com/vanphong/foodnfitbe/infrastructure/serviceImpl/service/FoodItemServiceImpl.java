@@ -2,14 +2,22 @@ package com.vanphong.foodnfitbe.infrastructure.serviceImpl.service;
 
 import com.vanphong.foodnfitbe.application.service.FoodItemService;
 import com.vanphong.foodnfitbe.application.service.TranslateService;
+import com.vanphong.foodnfitbe.domain.entity.Exercise;
 import com.vanphong.foodnfitbe.domain.entity.FoodItem;
 import com.vanphong.foodnfitbe.domain.repository.FoodItemRepository;
+import com.vanphong.foodnfitbe.domain.specification.ExerciseSpecification;
+import com.vanphong.foodnfitbe.domain.specification.FoodSpecification;
 import com.vanphong.foodnfitbe.presentation.mapper.FoodItemMapper;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.FoodItemRequest;
+import com.vanphong.foodnfitbe.presentation.viewmodel.request.SearchCriteria;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.FoodItemResponse;
 import jakarta.transaction.Transactional;
 import jdk.jfr.Registered;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -81,9 +89,17 @@ public class FoodItemServiceImpl implements FoodItemService {
     }
 
     @Override
-    public List<FoodItemResponse> getAllFoodItems() {
-        List<FoodItem> foodItems = foodItemRepository.findAll();
-        return foodItemMapper.toResponses(foodItems);
+    public Page<FoodItemResponse> getAllFoodItems(SearchCriteria criteria) {
+        int page = criteria.getPage() != null && criteria.getPage() > 0 ? criteria.getPage() - 1: 0;
+        int size = criteria.getSize() != null && criteria.getSize() > 0 ? criteria.getSize() : 10;
+
+        String sortBy = criteria.getSortBy() != null ? criteria.getSortBy() : "id";
+        Sort.Direction direction = "desc".equalsIgnoreCase(criteria.getSortDir()) ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, sortBy));
+
+        Specification<FoodItem> spec = FoodSpecification.getFoodItemsByCriteria(criteria);
+        return foodItemRepository.findAll(spec, pageRequest).map(foodItemMapper::toResponse);
     }
 
     @Override

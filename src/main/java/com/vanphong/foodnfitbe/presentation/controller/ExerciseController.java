@@ -3,8 +3,10 @@ package com.vanphong.foodnfitbe.presentation.controller;
 import com.vanphong.foodnfitbe.application.service.ExerciseService;
 import com.vanphong.foodnfitbe.domain.entity.Exercise;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.ExerciseRequest;
+import com.vanphong.foodnfitbe.presentation.viewmodel.request.SearchCriteria;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.ExerciseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +29,20 @@ public class ExerciseController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<ExerciseResponse>> getAll() {
-        List<ExerciseResponse> response = exerciseService.getAllExercises();
+    public ResponseEntity<Page<ExerciseResponse>> getAll(
+            @RequestParam(defaultValue = "") String search,  // Mặc định là chuỗi rỗng
+            @RequestParam(defaultValue = "0") Integer page,  // Mặc định là 0
+            @RequestParam(defaultValue = "10") Integer size,  // Mặc định là 10
+            @RequestParam(defaultValue = "id") String sortBy,  // Mặc định là "id"
+            @RequestParam(defaultValue = "asc") String sortDir
+    ) {
+        SearchCriteria criteria = SearchCriteria.builder()
+                .search(search)
+                .size(size)
+                .page(page)
+                .sortDir(sortDir)
+                .sortBy(sortBy).build();
+        Page<ExerciseResponse> response = exerciseService.getAllExercises(criteria);
         return ResponseEntity.ok(response);
     }
 

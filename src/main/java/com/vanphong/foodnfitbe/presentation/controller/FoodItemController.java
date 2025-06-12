@@ -4,11 +4,13 @@ import com.vanphong.foodnfitbe.application.service.FoodItemService;
 import com.vanphong.foodnfitbe.application.service.SpoonacularService;
 import com.vanphong.foodnfitbe.domain.repository.FoodItemRepository;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.FoodItemRequest;
+import com.vanphong.foodnfitbe.presentation.viewmodel.request.SearchCriteria;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.FoodItemResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +36,20 @@ public class FoodItemController {
         return ResponseEntity.ok(response);
     }
     @GetMapping("/getAll")
-    public ResponseEntity<List<FoodItemResponse>> getAll() {
-        List<FoodItemResponse> foodItemResponses = foodItemService.getAllFoodItems();
+    public ResponseEntity<Page<FoodItemResponse>> getAll(
+            @RequestParam(defaultValue = "") String search,  // Mặc định là chuỗi rỗng
+            @RequestParam(defaultValue = "0") Integer page,  // Mặc định là 0
+            @RequestParam(defaultValue = "10") Integer size,  // Mặc định là 10
+            @RequestParam(defaultValue = "id") String sortBy,  // Mặc định là "id"
+            @RequestParam(defaultValue = "asc") String sortDir
+    ) {
+        SearchCriteria criteria = SearchCriteria.builder()
+                .search(search)
+                .size(size)
+                .page(page)
+                .sortDir(sortDir)
+                .sortBy(sortBy).build();
+        Page<FoodItemResponse> foodItemResponses = foodItemService.getAllFoodItems(criteria);
         return ResponseEntity.ok(foodItemResponses);
     }
     @PutMapping("/update/{id}")

@@ -2,11 +2,21 @@ package com.vanphong.foodnfitbe.infrastructure.serviceImpl.service;
 
 import com.vanphong.foodnfitbe.application.service.ExerciseService;
 import com.vanphong.foodnfitbe.domain.entity.Exercise;
+import com.vanphong.foodnfitbe.domain.entity.Users;
 import com.vanphong.foodnfitbe.domain.repository.ExerciseRepository;
+import com.vanphong.foodnfitbe.domain.specification.ExerciseSpecification;
+import com.vanphong.foodnfitbe.domain.specification.UserSpecification;
 import com.vanphong.foodnfitbe.presentation.mapper.ExerciseMapper;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.ExerciseRequest;
+import com.vanphong.foodnfitbe.presentation.viewmodel.request.SearchCriteria;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.ExerciseResponse;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,12 +27,12 @@ import java.util.Optional;
 import static com.vanphong.foodnfitbe.utils.YouTubeUtils.extractYouTubeVideoId;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class ExerciseServiceImpl implements ExerciseService {
     private final ExerciseRepository exerciseRepository;
-    @Autowired
-    public ExerciseServiceImpl(ExerciseRepository exerciseRepository) {
-        this.exerciseRepository = exerciseRepository;
-    }
+    private final ExerciseMapper exerciseMapper;
+
     @Override
     public ExerciseResponse createExercise(ExerciseRequest exerciseVModel) {
         String rawUrl = exerciseVModel.getVideoUrl();
@@ -30,15 +40,23 @@ public class ExerciseServiceImpl implements ExerciseService {
 
         exerciseVModel.setVideoUrl(videoId);
 
-        Exercise exercise = ExerciseMapper.toEntity(exerciseVModel);
+        Exercise exercise = exerciseMapper.toEntity(exerciseVModel);
         Exercise saved = exerciseRepository.saveExercise(exercise);
-        return ExerciseMapper.toResponse(saved);
+        return exerciseMapper.toResponse(saved);
     }
 
     @Override
-    public List<ExerciseResponse> getAllExercises() {
-        List<Exercise> exerciseResponseList = exerciseRepository.findAllExercises();
-        return ExerciseMapper.toResponses(exerciseResponseList);
+    public Page<ExerciseResponse> getAllExercises(SearchCriteria criteria) {
+        int page = criteria.getPage() != null && criteria.getPage() > 0 ? criteria.getPage() - 1: 0;
+        int size = criteria.getSize() != null && criteria.getSize() > 0 ? criteria.getSize() : 10;
+
+        String sortBy = criteria.getSortBy() != null ? criteria.getSortBy() : "id";
+        Sort.Direction direction = "desc".equalsIgnoreCase(criteria.getSortDir()) ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, sortBy));
+
+        Specification<Exercise> spec = ExerciseSpecification.getExercisesByCriteria(criteria);
+        return exerciseRepository.findAllExercises(spec, pageRequest).map(exerciseMapper::toResponse);
     }
 
     @Override
@@ -65,7 +83,7 @@ public class ExerciseServiceImpl implements ExerciseService {
         existing.setActive(request.getActive());
 
         Exercise updated = exerciseRepository.saveExercise(existing);
-        return ExerciseMapper.toResponse(updated);
+        return exerciseMapper.toResponse(updated);
     }
 
     @Override
@@ -81,13 +99,13 @@ public class ExerciseServiceImpl implements ExerciseService {
     @Override
     public Optional<ExerciseResponse> getExerciseById(Integer id) {
         Optional<Exercise> optional = exerciseRepository.findExerciseById(id);
-        return optional.map(ExerciseMapper::toResponse);
+        return optional.map(exerciseMapper::toResponse);
     }
 
     @Override
     public List<ExerciseResponse> searchExercise(String keyword) {
         List<Exercise> list = exerciseRepository.searchExercise(keyword);
-        return ExerciseMapper.toResponses(list);
+        return exerciseMapper.toResponses(list);
     }
 
     @Override

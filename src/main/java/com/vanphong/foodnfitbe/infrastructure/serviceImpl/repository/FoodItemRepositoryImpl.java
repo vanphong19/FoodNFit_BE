@@ -4,6 +4,9 @@ import com.vanphong.foodnfitbe.domain.entity.FoodItem;
 import com.vanphong.foodnfitbe.domain.repository.FoodItemRepository;
 import com.vanphong.foodnfitbe.infrastructure.jpaRepository.FoodItemJpaRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -15,8 +18,8 @@ import java.util.Optional;
 public class FoodItemRepositoryImpl implements FoodItemRepository {
     private final FoodItemJpaRepository foodItemJpaRepository;
     @Override
-    public List<FoodItem> findAll() {
-        return foodItemJpaRepository.findAll();
+    public Page<FoodItem> findAll(Specification<FoodItem> specification, PageRequest pageRequest) {
+        return foodItemJpaRepository.findAll(specification, pageRequest);
     }
 
     @Override

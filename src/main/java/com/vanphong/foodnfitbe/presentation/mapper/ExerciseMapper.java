@@ -3,12 +3,13 @@ package com.vanphong.foodnfitbe.presentation.mapper;
 import com.vanphong.foodnfitbe.domain.entity.Exercise;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.ExerciseRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.ExerciseResponse;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Component
 public class ExerciseMapper {
-    public static Exercise toEntity(ExerciseRequest request) {
+    public Exercise toEntity(ExerciseRequest request) {
         return Exercise.builder()
                 .exerciseName(request.getExerciseName())
                 .description(request.getDescription())
@@ -28,7 +29,7 @@ public class ExerciseMapper {
                 .build();
     }
 
-    public static ExerciseResponse toResponse(Exercise exercise) {
+    public ExerciseResponse toResponse(Exercise exercise) {
         return ExerciseResponse.builder()
                 .id(exercise.getId())
                 .name(exercise.getExerciseName())
@@ -49,7 +50,7 @@ public class ExerciseMapper {
                 .build();
     }
 
-    public static List<ExerciseResponse> toResponses(List<Exercise> exercises) {
-        return exercises.stream().map(ExerciseMapper::toResponse).collect(Collectors.toList());
+    public List<ExerciseResponse> toResponses(List<Exercise> exercises) {
+        return exercises.stream().map(this::toResponse).collect(Collectors.toList());
     }
 }

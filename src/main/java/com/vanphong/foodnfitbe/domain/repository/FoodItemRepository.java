@@ -1,6 +1,9 @@
 package com.vanphong.foodnfitbe.domain.repository;
 
 import com.vanphong.foodnfitbe.domain.entity.FoodItem;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -9,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface FoodItemRepository {
-    List<FoodItem> findAll();
+    Page<FoodItem> findAll(Specification<FoodItem> specification, PageRequest pageRequest);
     Optional<FoodItem> findById(Integer id);
     FoodItem save(FoodItem foodItem);
     Boolean existsById(Integer id);
