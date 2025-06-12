@@ -21,5 +21,5 @@ public class UserHistoryResponse {
     private Boolean isActive;
     private LocalTime changedAt;
     private String changeType;
-    private UUID changedBy;
+    private String changedBy;
 }

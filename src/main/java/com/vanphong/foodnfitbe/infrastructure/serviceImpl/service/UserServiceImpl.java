@@ -6,10 +6,12 @@ import com.vanphong.foodnfitbe.domain.entity.Users;
 import com.vanphong.foodnfitbe.domain.repository.UserHistoryRepository;
 import com.vanphong.foodnfitbe.domain.repository.UserRepository;
 import com.vanphong.foodnfitbe.domain.specification.UserSpecification;
+import com.vanphong.foodnfitbe.exception.NotFoundException;
 import com.vanphong.foodnfitbe.presentation.mapper.UserMapper;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserSearchCriteria;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.UserResponse;
+import com.vanphong.foodnfitbe.utils.CurrentUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.YearMonth;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -29,12 +32,14 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final UserHistoryRepository userHistoryRepository;
+    private final CurrentUser currentUser;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, UserHistoryRepository userHistoryRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, UserHistoryRepository userHistoryRepository, CurrentUser currentUser) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.userHistoryRepository = userHistoryRepository;
+        this.currentUser = currentUser;
     }
 
     @Override
@@ -54,6 +59,7 @@ public class UserServiceImpl implements UserService {
                 .isActive(user.isActive())
                 .changeType("CREATE")
                 .changedAt(LocalTime.now())
+                .changedBy(getFullname())
                 .build());
         return userMapper.toResponse(saved);
     }
@@ -73,6 +79,7 @@ public class UserServiceImpl implements UserService {
                 .isActive(user.isActive())
                 .changeType("UPDATE")
                 .changedAt(LocalTime.now())
+                .changedBy(getFullname())
                 .build());
 
         // Cập nhật user
@@ -122,6 +129,7 @@ public class UserServiceImpl implements UserService {
                 .isActive(user.isActive())
                 .changeType("DELETE")
                 .changedAt(LocalTime.now())
+                .changedBy(getFullname())
                 .build());
 
         user.setActive(false);
@@ -143,6 +151,7 @@ public class UserServiceImpl implements UserService {
                 .isActive(user.isActive())
                 .changeType("BLOCK")
                 .changedAt(LocalTime.now())
+                .changedBy(getFullname())
                 .build());
 
         boolean curStatus = user.isBlocked();
@@ -175,5 +184,13 @@ public class UserServiceImpl implements UserService {
         LocalDate endOfMonth = thisMonth.atEndOfMonth();
 
         return userRepository.countUsersByMonth(startOfMonth, endOfMonth);
+    }
+
+    public String getFullname() {
+        Optional<Users> updater =userRepository.findUser(currentUser.getCurrentUserId());
+        if(updater.isEmpty()){
+            throw new NotFoundException("không tìm thấy user");
+        }
+        return updater.get().getFullname();
     }
 }

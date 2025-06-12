@@ -53,5 +53,5 @@ public class UserHistory {
     private String changeType;
 
     @Column(name = "changed_by")
-    private UUID changedBy;
+    private String changedBy;
 }

@@ -2,6 +2,8 @@ package com.vanphong.foodnfitbe.application.service;
 
 import com.vanphong.foodnfitbe.infrastructure.jpaRepository.UserJpaRepository;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -68,11 +70,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
                 System.out.println("✅ Authenticated user: " + email + " with role: " + role);
             }
-        } catch (Exception e) {
-            System.out.println("⚠️ JWT parse failed: " + e.getMessage());
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid token");
+        } catch (ExpiredJwtException e) {
+            System.out.println("⏰ Token expired: " + e.getMessage());
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired"); // 401 để FE refresh
+            return;
+        } catch (JwtException e) {
+            System.out.println("⚠️ Invalid JWT: " + e.getMessage());
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid token"); // các lỗi khác
             return;
         }
+
 
         filterChain.doFilter(request, response);
     }

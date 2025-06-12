@@ -53,8 +53,24 @@ public class SpoonacularService {
         while (savedCount < 500 && offset < 5000) { // Giới hạn tối đa 5000 để tránh vòng lặp vô hạn
             try {
                 // Tìm kiếm recipes với các criteria khác nhau để đa dạng hóa
-                String[] cuisines = {"american", "italian", "asian", "mexican", "mediterranean", "indian"};
-                String[] types = {"main course", "dessert", "appetizer", "breakfast", "soup", "salad"};
+                String[] cuisines = {
+                        "vietnamese",       // ✅ Cốt lõi
+                        "asian",            // ✅ Kết hợp châu Á gần gũi (Thái, Trung, Nhật)
+                };
+
+                String[] types = {
+                        "main course",      // ✅ Món chính (cơm, bún, phở,...)
+                        "breakfast",        // ✅ Bữa sáng (xôi, bánh mì, bún bò,...)
+                        "soup",             // ✅ Canh, súp
+                        "salad",            // ✅ Gỏi, nộm
+                        "dessert",          // ✅ Tráng miệng (chè, trái cây)
+                        "appetizer",        // ✅ Món khai vị (gỏi cuốn, chả giò,...)
+                        "lunch",            // ✅ Bữa trưa (nên sửa lại chính tả: "lunch" thay vì "launch")
+                        "dinner",           // ✅ Bữa tối
+                        "noodle",           // ✅ Mì, bún, phở
+                        "rice",             // ✅ Các món cơm
+                        "vegetarian"        // ✅ Món chay (phổ biến)
+                };
 
                 String cuisine = cuisines[offset / 100 % cuisines.length];
                 String type = types[(offset / 100) % types.length];
@@ -128,7 +144,6 @@ public class SpoonacularService {
     private FoodItem convertToFoodItem(SpoonacularRecipeResponse recipe) {
         FoodItem foodItem = new FoodItem();
 
-        foodItem.setId(recipe.getId());
         foodItem.setNameEn(recipe.getTitle());
         foodItem.setImageUrl(recipe.getImage());
         foodItem.setActive(true);
