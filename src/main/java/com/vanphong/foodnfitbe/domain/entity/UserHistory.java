@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
@@ -48,7 +49,7 @@ public class UserHistory {
     private Boolean isActive;
 
     @Column(name = "changed_at")
-    private LocalTime changedAt;
+    private LocalDateTime changedAt;
 
     private String changeType;
 

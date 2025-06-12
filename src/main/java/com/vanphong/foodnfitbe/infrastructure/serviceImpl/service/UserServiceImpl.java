@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.util.Optional;
@@ -58,7 +59,7 @@ public class UserServiceImpl implements UserService {
                 .avatarUrl(user.getAvatarUrl())
                 .isActive(user.isActive())
                 .changeType("CREATE")
-                .changedAt(LocalTime.now())
+                .changedAt(LocalDateTime.now())
                 .changedBy(getFullname())
                 .build());
         return userMapper.toResponse(saved);
@@ -78,7 +79,7 @@ public class UserServiceImpl implements UserService {
                 .avatarUrl(user.getAvatarUrl())
                 .isActive(user.isActive())
                 .changeType("UPDATE")
-                .changedAt(LocalTime.now())
+                .changedAt(LocalDateTime.now())
                 .changedBy(getFullname())
                 .build());
 
@@ -128,7 +129,7 @@ public class UserServiceImpl implements UserService {
                 .avatarUrl(user.getAvatarUrl())
                 .isActive(user.isActive())
                 .changeType("DELETE")
-                .changedAt(LocalTime.now())
+                .changedAt(LocalDateTime.now())
                 .changedBy(getFullname())
                 .build());
 
@@ -150,7 +151,7 @@ public class UserServiceImpl implements UserService {
                 .avatarUrl(user.getAvatarUrl())
                 .isActive(user.isActive())
                 .changeType("BLOCK")
-                .changedAt(LocalTime.now())
+                .changedAt(LocalDateTime.now())
                 .changedBy(getFullname())
                 .build());
 
