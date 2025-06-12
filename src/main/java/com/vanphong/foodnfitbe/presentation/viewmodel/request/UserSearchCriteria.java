@@ -9,7 +9,7 @@ import lombok.*;
 @Setter
 public class UserSearchCriteria {
     private String search = ""; // Mặc định là chuỗi rỗng nếu không có giá trị
-    private Boolean status = true; // Mặc định là true nếu không có giá trị
+    private Boolean gender = null; // Mặc định là true nếu không có giá trị
     private Boolean block = null; // Mặc định là null nếu không có giá trị
     private Integer page = 0; // Mặc định là trang đầu tiên (0)
     private Integer size = 10; // Mặc định là 10 phần tử mỗi trang

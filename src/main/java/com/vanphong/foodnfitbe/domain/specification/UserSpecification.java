@@ -21,15 +21,19 @@ public class UserSpecification {
                 predicates.add(criteriaBuilder.or(namePredicate, emailPredicate));
             }
 
-            if(criteria.getStatus() != null){
-                predicates.add(criteriaBuilder.equal(root.get("active"), criteria.getStatus()));
+            if(criteria.getGender() != null){
+                predicates.add(criteriaBuilder.equal(root.get("gender"), criteria.getGender()));
             }
 
             if(criteria.getBlock() != null){
                 predicates.add(criteriaBuilder.equal(root.get("blocked"), criteria.getBlock()));
             }
 
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            if(predicates.isEmpty()) {
+                return criteriaBuilder.conjunction();  // trả về true, tức lấy tất cả
+            } else {
+                return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            }
         });
     }
 }

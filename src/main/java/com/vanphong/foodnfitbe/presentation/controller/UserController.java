@@ -28,7 +28,7 @@ public class UserController {
     @GetMapping("/getAll")
     public ResponseEntity<Page<UserResponse>> getAll(
             @RequestParam(defaultValue = "") String search,  // Mặc định là chuỗi rỗng
-            @RequestParam(defaultValue = "true") Boolean status,  // Mặc định là true
+            @RequestParam(defaultValue = "") Boolean gender,  // Mặc định là true
             @RequestParam(defaultValue = "") Boolean block,  // Mặc định là true
             @RequestParam(defaultValue = "0") Integer page,  // Mặc định là 0
             @RequestParam(defaultValue = "10") Integer size,  // Mặc định là 10
@@ -38,7 +38,7 @@ public class UserController {
         // Nếu không có giá trị `block`, nó sẽ tự động là null
         UserSearchCriteria criteria = new UserSearchCriteria();
         criteria.setSearch(search);
-        criteria.setStatus(status);
+        criteria.setGender(gender);
         criteria.setBlock(block); // Nếu block không được cung cấp, giá trị mặc định sẽ là null
         criteria.setPage(page);
         criteria.setSize(size);
