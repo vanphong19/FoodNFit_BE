@@ -54,23 +54,42 @@ public class SpoonacularService {
             try {
                 // Tìm kiếm recipes với các criteria khác nhau để đa dạng hóa
                 String[] cuisines = {
-                        "vietnamese",       // ✅ Cốt lõi
-                        "asian",            // ✅ Kết hợp châu Á gần gũi (Thái, Trung, Nhật)
+                        "vietnamese",       // Món Việt
+                        "asian",            // Tổng hợp châu Á
+                        "thai",             // Gần gũi vị giác người Việt
+                        "chinese",          // Gốc phổ biến, nhiều món tương đồng
+                        "japanese",         // Sushi, mì ramen,...
+                        "korean",           // Mì cay, cơm trộn, kim chi
+                        "indian",           // Một số món chay, cà ri phổ biến
+                        "french"            // Bánh mì, súp, món Âu ảnh hưởng đến VN
                 };
 
                 String[] types = {
-                        "main course",      // ✅ Món chính (cơm, bún, phở,...)
-                        "breakfast",        // ✅ Bữa sáng (xôi, bánh mì, bún bò,...)
-                        "soup",             // ✅ Canh, súp
-                        "salad",            // ✅ Gỏi, nộm
-                        "dessert",          // ✅ Tráng miệng (chè, trái cây)
-                        "appetizer",        // ✅ Món khai vị (gỏi cuốn, chả giò,...)
-                        "lunch",            // ✅ Bữa trưa (nên sửa lại chính tả: "lunch" thay vì "launch")
-                        "dinner",           // ✅ Bữa tối
-                        "noodle",           // ✅ Mì, bún, phở
-                        "rice",             // ✅ Các món cơm
-                        "vegetarian"        // ✅ Món chay (phổ biến)
+                        "main course",      // Món chính
+                        "breakfast",        // Bữa sáng
+                        "lunch",            // Bữa trưa
+                        "dinner",           // Bữa tối
+                        "appetizer",        // Khai vị
+                        "soup",             // Canh
+                        "salad",            // Gỏi, nộm
+                        "dessert",          // Chè, bánh
+                        "snack",            // Ăn vặt: bánh tráng, nem chua,...
+                        "bread",            // Bánh mì
+                        "rice",             // Các món cơm
+                        "noodle",           // Bún, mì, phở
+                        "drink",            // Nước uống: sinh tố, nước mía, sữa đậu
+                        "sauce",            // Nước chấm, sốt
+                        "side dish",        // Món ăn phụ: rau xào, trứng chiên,...
+                        "fingerfood",       // Nem, chả, gỏi cuốn
+                        "vegetarian",       // Món chay
+                        "seafood",          // Hải sản: tôm, mực, cá
+                        "pasta",            // Một số món mì Ý gần gũi
+                        "curry",            // Cà ri gà, cà ri chay
+                        "stew",             // Kho, hầm (ví dụ thịt kho trứng)
+                        "grill",            // Nướng: bò nướng lá lốt, nem nướng
+                        "hot pot"           // Lẩu
                 };
+
 
                 String cuisine = cuisines[offset / 100 % cuisines.length];
                 String type = types[(offset / 100) % types.length];

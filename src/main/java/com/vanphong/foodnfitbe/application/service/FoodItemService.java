@@ -13,8 +13,9 @@ import java.util.Optional;
 public interface FoodItemService {
     FoodItemResponse addFoodItem(FoodItemRequest request);
     FoodItemResponse updateFoodItem(Integer id, FoodItemRequest request);
-    FoodItemResponse deleteFoodItem(Integer id);
+    void deleteFoodItem(Integer id);
     Page<FoodItemResponse> getAllFoodItems(SearchCriteria criteria);
     Optional<FoodItemResponse> getFoodItemById(Integer id);
     Long countFoodCreatedThisMonth();
+    FoodItemResponse getById(Integer id);
 }

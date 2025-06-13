@@ -84,8 +84,12 @@ public class FoodItemServiceImpl implements FoodItemService {
     }
 
     @Override
-    public FoodItemResponse deleteFoodItem(Integer id) {
-        return null;
+    public void deleteFoodItem(Integer id) {
+        Optional<FoodItem> foodItem = foodItemRepository.findById(id);
+        if(foodItem.isEmpty()){
+            throw new RuntimeException("Food item not found with id: " + id);
+        }
+        foodItemRepository.delete(foodItem.get());
     }
 
     @Override
@@ -115,5 +119,14 @@ public class FoodItemServiceImpl implements FoodItemService {
         LocalDate endOfMonth = thisMonth.atEndOfMonth();
 
         return foodItemRepository.countFoodCreatedThisMonth(startOfMonth, endOfMonth);
+    }
+
+    @Override
+    public FoodItemResponse getById(Integer id) {
+        Optional<FoodItem> foodItem = foodItemRepository.findById(id);
+        if(foodItem.isEmpty()){
+            throw new RuntimeException("Food item not found with id: " + id);
+        }
+        return foodItemMapper.toResponse(foodItem.get());
     }
 }

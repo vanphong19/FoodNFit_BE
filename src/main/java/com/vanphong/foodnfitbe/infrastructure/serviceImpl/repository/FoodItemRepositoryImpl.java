@@ -46,4 +46,9 @@ public class FoodItemRepositoryImpl implements FoodItemRepository {
     public Long countFoodCreatedThisMonth(LocalDate from, LocalDate to) {
         return foodItemJpaRepository.countByCreatedDateBetweenAndActiveTrue(from, to);
     }
+
+    @Override
+    public void delete(FoodItem foodItem) {
+        foodItemJpaRepository.delete(foodItem);
+    }
 }

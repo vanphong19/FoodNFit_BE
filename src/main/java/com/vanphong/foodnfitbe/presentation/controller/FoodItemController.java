@@ -57,6 +57,16 @@ public class FoodItemController {
         FoodItemResponse response = foodItemService.updateFoodItem(id, foodItemRequest);
         return ResponseEntity.ok(response);
     }
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<FoodItemResponse> getById(@PathVariable Integer id) {
+        FoodItemResponse response = foodItemService.getById(id);
+        return ResponseEntity.ok(response);
+    }
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<String> remove(@PathVariable Integer id) {
+        foodItemService.deleteFoodItem(id);
+        return ResponseEntity.ok("Removed " + id + " has been successfully");
+    }
 
     @PostMapping("/fetch-spoonacular-data")
     public ResponseEntity<Map<String, Object>> fetchSpoonacularData() {

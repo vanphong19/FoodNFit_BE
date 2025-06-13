@@ -18,4 +18,5 @@ public interface FoodItemRepository {
     Boolean existsById(Integer id);
     Long count();
     Long countFoodCreatedThisMonth(LocalDate from, LocalDate to);
+    void delete(FoodItem foodItem);
 }
