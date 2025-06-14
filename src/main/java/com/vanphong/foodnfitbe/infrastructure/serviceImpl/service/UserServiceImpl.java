@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -43,26 +44,37 @@ public class UserServiceImpl implements UserService {
         this.currentUser = currentUser;
     }
 
+
     @Override
     public UserResponse createUser(UserRequest userRequest) {
+        // Tạo và lưu user trước
         Users user = userMapper.toEntity(userRequest);
         user.setPasswordHash(passwordEncoder.encode(userRequest.getPassword()));
         user.setCreatedDate(LocalDate.now());
-        Users saved = userRepository.saveUser(user);
-        userHistoryRepository.save(UserHistory.builder()
-                .user(saved)
-                .email(user.getEmail())
-                .passwordHash(user.getPasswordHash())
-                .fullname(user.getFullname())
-                .gender(user.isGender())
-                .birthday(user.getBirthday())
-                .avatarUrl(user.getAvatarUrl())
-                .isActive(user.isActive())
+
+        // Lưu user và flush để đảm bảo ID được generate
+        Users savedUser = userRepository.saveAndFlush(user); // Thay saveUser bằng saveAndFlush
+
+        System.out.println("Saved user ID: " + savedUser.getId());
+
+        // Tạo UserHistory sau khi user đã được lưu và có ID
+        UserHistory history = UserHistory.builder()
+                .user(savedUser) // Sử dụng savedUser thay vì tìm lại
+                .email(savedUser.getEmail())
+                .passwordHash(savedUser.getPasswordHash())
+                .fullname(savedUser.getFullname())
+                .gender(savedUser.isGender())
+                .birthday(savedUser.getBirthday())
+                .avatarUrl(savedUser.getAvatarUrl())
+                .isActive(savedUser.isActive())
                 .changeType("CREATE")
                 .changedAt(LocalDateTime.now())
                 .changedBy(getFullname())
-                .build());
-        return userMapper.toResponse(saved);
+                .build();
+
+        userHistoryRepository.save(history);
+
+        return userMapper.toResponse(savedUser);
     }
 
     @Override

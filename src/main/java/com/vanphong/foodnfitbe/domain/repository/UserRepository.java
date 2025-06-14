@@ -20,4 +20,5 @@ public interface UserRepository {
     void deleteUser(UUID id);
     Long countUsersByMonth(LocalDate from, LocalDate to);
     Long countUsers();
+    Users saveAndFlush(Users user);
 }

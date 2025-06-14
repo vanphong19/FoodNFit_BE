@@ -55,4 +55,9 @@ public class UserRepositoryImpl implements UserRepository {
     public Long countUsers() {
         return userJpaRepository.count();
     }
+
+    @Override
+    public Users saveAndFlush(Users user) {
+        return userJpaRepository.saveAndFlush(user);
+    }
 }
