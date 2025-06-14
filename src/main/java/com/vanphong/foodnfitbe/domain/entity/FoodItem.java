@@ -56,4 +56,6 @@ public class FoodItem {
 
     @Column(name = "created_date")
     private LocalDate createdDate;
+    @Column(name = "serving_weight")
+    private Double servingWeight;
 }

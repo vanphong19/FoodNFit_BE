@@ -14,4 +14,5 @@ public class StepsTrackingRequest {
     private Integer stepsCount;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private Boolean isWalkingSession;
 }

@@ -1,7 +1,9 @@
 package com.vanphong.foodnfitbe.presentation.controller;
 
+import com.vanphong.foodnfitbe.application.service.EdamamService;
 import com.vanphong.foodnfitbe.application.service.FoodItemService;
 import com.vanphong.foodnfitbe.application.service.SpoonacularService;
+import com.vanphong.foodnfitbe.domain.entity.FoodItem;
 import com.vanphong.foodnfitbe.domain.repository.FoodItemRepository;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.FoodItemRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.SearchCriteria;
@@ -28,6 +30,7 @@ public class FoodItemController {
     private final SpoonacularService spoonacularService;
     private static final Logger log = LoggerFactory.getLogger(FoodItemController.class);
     private final FoodItemRepository foodItemRepository;
+    private final EdamamService edamamService;
 
 
     @PostMapping("/create")
@@ -89,6 +92,11 @@ public class FoodItemController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+    @GetMapping("/fetch")
+    public ResponseEntity<?> fetchVietnameseFoods(@RequestParam(defaultValue = "200") int count) {
+        List<FoodItem> foods = edamamService.fetchAndSaveVietnameseFoods(count);
+        return ResponseEntity.ok(foods);
+    }
 
     @GetMapping("/count")
     public ResponseEntity<Map<String, Object>> getFoodCount() {
@@ -113,4 +121,11 @@ public class FoodItemController {
         Long count = foodItemService.countFoodCreatedThisMonth();
         return ResponseEntity.ok(count);
     }
+
+    @GetMapping("/scrape-directions")
+    public ResponseEntity<String> getDirections(@RequestParam String url) {
+        String instructions = edamamService.scrapeRecipeInstructionsFromUrl(url);
+        return ResponseEntity.ok(instructions);
+    }
+
 }

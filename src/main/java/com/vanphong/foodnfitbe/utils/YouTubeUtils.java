@@ -4,17 +4,16 @@ public class YouTubeUtils {
     public static String extractYouTubeVideoId(String url) {
         if (url == null || url.isEmpty()) return null;
 
-        // Trường hợp dạng đầy đủ
-        if (url.contains("v=")) {
-            return url.substring(url.indexOf("v=") + 2).split("&")[0];
+        // Regex cho cả youtube.com và youtu.be
+        String pattern = "^(?:https?://)?(?:www\\.)?(?:youtube\\.com/watch\\?v=|youtu\\.be/)([\\w-]{11})";
+
+        java.util.regex.Pattern compiledPattern = java.util.regex.Pattern.compile(pattern);
+        java.util.regex.Matcher matcher = compiledPattern.matcher(url);
+
+        if (matcher.find()) {
+            return matcher.group(1); // ID video
         }
 
-        // Trường hợp dạng ngắn: youtu.be/dQw4w9WgXcQ
-        if (url.contains("youtu.be/")) {
-            return url.substring(url.lastIndexOf("/") + 1);
-        }
-
-        return url; // fallback nếu không match
+        return null;
     }
-
 }

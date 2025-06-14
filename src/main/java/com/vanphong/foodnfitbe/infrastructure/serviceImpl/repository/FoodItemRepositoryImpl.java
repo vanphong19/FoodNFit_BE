@@ -51,4 +51,9 @@ public class FoodItemRepositoryImpl implements FoodItemRepository {
     public void delete(FoodItem foodItem) {
         foodItemJpaRepository.delete(foodItem);
     }
+
+    @Override
+    public void saveAll(List<FoodItem> foodItems) {
+        foodItemJpaRepository.saveAll(foodItems);
+    }
 }

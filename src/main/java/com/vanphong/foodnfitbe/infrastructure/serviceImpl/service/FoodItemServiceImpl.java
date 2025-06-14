@@ -51,6 +51,8 @@ public class FoodItemServiceImpl implements FoodItemService {
                 .protein(request.getProtein())
                 .imageUrl(request.getImageUrl())
                 .foodTypeId(request.getFoodTypeId())
+                .createdDate(LocalDate.now())
+                .ingredientsEn(request.getIngredientsEn())
                 .active(true)
                 .build();
 

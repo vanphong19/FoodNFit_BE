@@ -50,7 +50,7 @@ dependencies {
 	implementation("org.json:json:20240303")
 	implementation("org.apache.httpcomponents.client5:httpclient5")
 	implementation("com.fasterxml.jackson.core:jackson-databind")
-
+	implementation("org.jsoup:jsoup:1.17.2")
 }
 
 tasks.withType<Test> {

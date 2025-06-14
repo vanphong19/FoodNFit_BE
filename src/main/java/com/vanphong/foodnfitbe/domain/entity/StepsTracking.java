@@ -26,4 +26,6 @@ public class StepsTracking {
     private LocalDateTime startTime;
     @Column(name = "end_time")
     private LocalDateTime endTime;
+    @Column(name = "is_walking_session")
+    private Boolean isWalkingSession;
 }

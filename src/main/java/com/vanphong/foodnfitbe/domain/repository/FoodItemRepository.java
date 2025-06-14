@@ -19,4 +19,5 @@ public interface FoodItemRepository {
     Long count();
     Long countFoodCreatedThisMonth(LocalDate from, LocalDate to);
     void delete(FoodItem foodItem);
+    void saveAll(List<FoodItem> foodItems);
 }

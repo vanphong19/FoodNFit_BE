@@ -43,58 +43,103 @@ public class SpoonacularService {
     }
 
     public void fetchAndSave500Recipes() {
-        log.info("Bắt đầu lấy 500 món ăn từ Spoonacular...");
+        log.info("Bắt đầu lấy 500 món ăn Việt Nam từ Spoonacular...");
 
         Set<Integer> fetchedIds = new HashSet<>();
         int savedCount = 0;
         int offset = 0;
-        int batchSize = 100; // Spoonacular giới hạn 100 kết quả mỗi lần
+        int batchSize = 100;
 
-        while (savedCount < 500 && offset < 5000) { // Giới hạn tối đa 5000 để tránh vòng lặp vô hạn
+        // Từ khóa tìm kiếm tập trung vào món Việt Nam
+        String[] vietnameseKeywords = {
+                // Món phở và bún
+                "pho", "pho bo", "pho ga", "vietnamese pho", "beef pho", "chicken pho",
+                "bun", "bun bo hue", "bun rieu", "bun thit nuong", "bun cha", "bun bo nam bo",
+                "vermicelli", "vietnamese vermicelli", "rice noodles",
+
+                // Cơm và các món cơm
+                "com tam", "broken rice", "vietnamese rice", "com suon", "com ga",
+                "fried rice vietnamese", "com chien", "sticky rice", "xoi",
+
+                // Bánh mì và các loại bánh
+                "banh mi", "vietnamese sandwich", "banh xeo", "vietnamese pancake",
+                "banh cuon", "banh chung", "banh it", "vietnamese bread",
+
+                // Gỏi cuốn và nem
+                "goi cuon", "spring rolls", "fresh spring rolls", "vietnamese spring rolls",
+                "nem", "cha gio", "fried spring rolls", "summer rolls",
+
+                // Miến và các món miến
+                "mien", "mien ga", "glass noodles", "vietnamese glass noodles",
+                "cellophane noodles", "bean thread noodles",
+
+                // Canh và soup
+                "canh", "vietnamese soup", "canh chua", "sour soup",
+                "sup", "vietnamese broth",
+
+                // Chả cá và hải sản
+                "cha ca", "vietnamese fish", "tom", "shrimp vietnamese",
+                "cua", "vietnamese crab", "muc", "squid vietnamese",
+
+                // Thịt nướng và nướng
+                "thit nuong", "vietnamese grilled", "nem nuong", "grilled pork",
+                "bo nuong", "grilled beef", "vietnamese bbq",
+
+                // Chè và tráng miệng
+                "che", "vietnamese dessert", "sweet soup", "coconut dessert",
+                "flan vietnamese", "banh flan",
+
+                // Nước chấm và gia vị
+                "nuoc mam", "fish sauce", "nuoc cham", "vietnamese dipping sauce",
+                "vietnamese sauce", "tamarind sauce",
+
+                // Các món đặc trưng khác
+                "cao lau", "mi quang", "hu tieu", "bot chien", "banh trang",
+                "vietnamese noodle soup", "vietnamese street food"
+        };
+
+        // Cuisine types ưu tiên Việt Nam
+        String[] cuisines = {
+                "vietnamese",     // Ưu tiên cao nhất
+                "vietnamese",     // Lặp lại để tăng tỷ lệ
+                "vietnamese",
+                "asian",          // Backup cho món châu Á tương đồng
+                "thai",           // Có một số món tương đồng
+                "chinese"         // Một số món gốc Hoa ảnh hưởng VN
+        };
+
+        // Types tập trung vào các loại món Việt thường gặp
+        String[] types = {
+                "main course",    // Món chính
+                "soup",           // Phở, bún, canh
+                "noodle",         // Các món bún, miến, phở
+                "rice",           // Cơm tấm, cơm chiên
+                "appetizer",      // Gỏi cuốn, nem
+                "salad",          // Gỏi, nộm
+                "breakfast",      // Phở sáng, bánh mì
+                "lunch",          // Cơm trưa
+                "dinner",         // Cơm tối
+                "snack",          // Chè, bánh tráng
+                "side dish",      // Rau luộc, đậu phụ
+                "seafood",        // Chả cá, tôm, cua
+                "vegetarian",     // Món chay Việt
+                "dessert"         // Chè, bánh flan
+        };
+
+        int keywordIndex = 0;
+
+        while (savedCount < 500 && keywordIndex < vietnameseKeywords.length) {
             try {
-                // Tìm kiếm recipes với các criteria khác nhau để đa dạng hóa
-                String[] cuisines = {
-                        "vietnamese",       // Món Việt
-                        "asian",            // Tổng hợp châu Á
-                        "thai",             // Gần gũi vị giác người Việt
-                        "chinese",          // Gốc phổ biến, nhiều món tương đồng
-                        "japanese",         // Sushi, mì ramen,...
-                        "korean",           // Mì cay, cơm trộn, kim chi
-                        "indian",           // Một số món chay, cà ri phổ biến
-                        "french"            // Bánh mì, súp, món Âu ảnh hưởng đến VN
-                };
+                // Tìm kiếm theo từ khóa Việt Nam cụ thể
+                String keyword = vietnameseKeywords[keywordIndex];
+                List<Integer> recipeIds = searchRecipesByKeyword(keyword, offset, batchSize);
 
-                String[] types = {
-                        "main course",      // Món chính
-                        "breakfast",        // Bữa sáng
-                        "lunch",            // Bữa trưa
-                        "dinner",           // Bữa tối
-                        "appetizer",        // Khai vị
-                        "soup",             // Canh
-                        "salad",            // Gỏi, nộm
-                        "dessert",          // Chè, bánh
-                        "snack",            // Ăn vặt: bánh tráng, nem chua,...
-                        "bread",            // Bánh mì
-                        "rice",             // Các món cơm
-                        "noodle",           // Bún, mì, phở
-                        "drink",            // Nước uống: sinh tố, nước mía, sữa đậu
-                        "sauce",            // Nước chấm, sốt
-                        "side dish",        // Món ăn phụ: rau xào, trứng chiên,...
-                        "fingerfood",       // Nem, chả, gỏi cuốn
-                        "vegetarian",       // Món chay
-                        "seafood",          // Hải sản: tôm, mực, cá
-                        "pasta",            // Một số món mì Ý gần gũi
-                        "curry",            // Cà ri gà, cà ri chay
-                        "stew",             // Kho, hầm (ví dụ thịt kho trứng)
-                        "grill",            // Nướng: bò nướng lá lốt, nem nướng
-                        "hot pot"           // Lẩu
-                };
-
-
-                String cuisine = cuisines[offset / 100 % cuisines.length];
-                String type = types[(offset / 100) % types.length];
-
-                List<Integer> recipeIds = searchRecipes(cuisine, type, offset, batchSize);
+                // Nếu không tìm thấy đủ với keyword, thử với cuisine + type
+                if (recipeIds.isEmpty() && keywordIndex < cuisines.length * types.length) {
+                    String cuisine = cuisines[keywordIndex % cuisines.length];
+                    String type = types[keywordIndex % types.length];
+                    recipeIds = searchRecipes(cuisine, type, offset, batchSize);
+                }
 
                 for (Integer recipeId : recipeIds) {
                     if (savedCount >= 500) break;
@@ -104,34 +149,105 @@ public class SpoonacularService {
 
                     try {
                         SpoonacularRecipeResponse recipe = getRecipeDetails(recipeId);
-                        FoodItem foodItem = convertToFoodItem(recipe);
 
-                        // Kiểm tra tất cả các trường bắt buộc có giá trị
-                        if (isValidFoodItem(foodItem)) {
-                            foodItemRepository.save(foodItem);
-                            fetchedIds.add(recipeId);
-                            savedCount++;
-                            log.info("Đã lưu món ăn #{}: {} - Total: {}/500",
-                                    savedCount, foodItem.getNameEn(), savedCount);
+                        // Kiểm tra xem có phải món Việt không dựa trên tên và ingredients
+                        if (isVietnameseFood(recipe)) {
+                            FoodItem foodItem = convertToFoodItem(recipe);
+
+                            if (isValidFoodItem(foodItem)) {
+                                foodItemRepository.save(foodItem);
+                                fetchedIds.add(recipeId);
+                                savedCount++;
+                                log.info("Đã lưu món Việt #{}: {} - Total: {}/500",
+                                        savedCount, foodItem.getNameEn(), savedCount);
+                            }
                         }
 
-                        // Delay để tránh rate limit
-                        Thread.sleep(100);
+                        Thread.sleep(150); // Tăng delay để tránh rate limit
 
                     } catch (Exception e) {
                         log.warn("Lỗi khi xử lý recipe ID {}: {}", recipeId, e.getMessage());
                     }
                 }
 
-                offset += batchSize;
+                keywordIndex++;
+                if (keywordIndex % 10 == 0) { // Reset offset mỗi 10 keywords
+                    offset = 0;
+                } else {
+                    offset += batchSize;
+                }
 
             } catch (Exception e) {
-                log.error("Lỗi trong batch offset {}: {}", offset, e.getMessage());
-                offset += batchSize;
+                log.error("Lỗi khi tìm kiếm với keyword {}: {}",
+                        keywordIndex < vietnameseKeywords.length ? vietnameseKeywords[keywordIndex] : "unknown",
+                        e.getMessage());
+                keywordIndex++;
             }
         }
 
-        log.info("Hoàn thành! Đã lưu {} món ăn vào database", savedCount);
+        log.info("Hoàn thành! Đã lưu {} món ăn Việt Nam vào database", savedCount);
+    }
+
+    // Thêm method tìm kiếm theo keyword
+    private List<Integer> searchRecipesByKeyword(String keyword, int offset, int number) {
+        String url = String.format("%s/complexSearch?apiKey=%s&query=%s&offset=%d&number=%d&addRecipeInformation=false",
+                baseUrl, apiKey, keyword.replace(" ", "+"), offset, number);
+
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+            SpoonacularSearchResponse searchResponse = objectMapper.readValue(response.getBody(), SpoonacularSearchResponse.class);
+
+            return searchResponse.getResults().stream()
+                    .map(SpoonacularSearchResponse.Recipe::getId)
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            log.error("Lỗi khi search recipes với keyword '{}': {}", keyword, e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    // Method kiểm tra xem có phải món Việt không
+    private boolean isVietnameseFood(SpoonacularRecipeResponse recipe) {
+        String title = recipe.getTitle().toLowerCase();
+        String summary = recipe.getSummary() != null ? recipe.getSummary().toLowerCase() : "";
+
+        // Từ khóa đặc trưng món Việt
+        String[] vietnameseIndicators = {
+                "vietnam", "vietnamese", "pho", "banh", "bun", "com", "nuoc mam",
+                "fish sauce", "goi cuon", "spring roll", "nem", "cha gio",
+                "mien", "cao lau", "mi quang", "hu tieu", "che", "xoi",
+                "canh chua", "tom", "cua", "muc", "cha ca", "thit nuong"
+        };
+
+        // Kiểm tra title
+        for (String indicator : vietnameseIndicators) {
+            if (title.contains(indicator)) {
+                return true;
+            }
+        }
+
+        // Kiểm tra summary nếu có
+        for (String indicator : vietnameseIndicators) {
+            if (summary.contains(indicator)) {
+                return true;
+            }
+        }
+
+        // Kiểm tra ingredients
+        if (recipe.getExtendedIngredients() != null) {
+            for (var ingredient : recipe.getExtendedIngredients()) {
+                String ingredientName = ingredient.getName().toLowerCase();
+                if (ingredientName.contains("fish sauce") ||
+                        ingredientName.contains("rice paper") ||
+                        ingredientName.contains("vietnamese") ||
+                        ingredientName.contains("nuoc mam")) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private List<Integer> searchRecipes(String cuisine, String type, int offset, int number) {
