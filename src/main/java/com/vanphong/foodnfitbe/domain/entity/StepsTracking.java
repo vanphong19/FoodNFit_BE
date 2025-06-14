@@ -28,4 +28,6 @@ public class StepsTracking {
     private LocalDateTime endTime;
     @Column(name = "is_walking_session")
     private Boolean isWalkingSession;
+    @Column(name = "distance")
+    private Float distance;
 }

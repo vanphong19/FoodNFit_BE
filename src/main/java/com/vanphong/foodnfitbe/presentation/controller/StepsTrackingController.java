@@ -3,6 +3,7 @@ package com.vanphong.foodnfitbe.presentation.controller;
 import com.vanphong.foodnfitbe.application.service.StepsTrackingService;
 import com.vanphong.foodnfitbe.domain.entity.StepsTracking;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.StepsTrackingRequest;
+import com.vanphong.foodnfitbe.presentation.viewmodel.response.StepSummary;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.StepsTrackingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,5 +26,13 @@ public class StepsTrackingController {
     public ResponseEntity<List<StepsTrackingResponse>> getAll() {
         List<StepsTrackingResponse> list = stepsTrackingService.getStepsTrackingList();
         return ResponseEntity.ok(list);
+    }
+    @GetMapping("/today-summary")
+    public ResponseEntity<StepSummary> getTodaySummary() {
+        StepSummary summary = stepsTrackingService.countStepsAndDistance();
+        if (summary == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(summary);
     }
 }

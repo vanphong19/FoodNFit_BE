@@ -18,4 +18,5 @@ public class StepsTrackingRequest {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")  // <-- Thêm dòng này
     private LocalDateTime endTime;
     private Boolean isWalkingSession;
+    private Float distance;
 }

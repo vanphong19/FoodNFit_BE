@@ -16,6 +16,7 @@ public class StepsTrackingMapper {
                 .startTime(request.getStartTime())
                 .endTime(request.getEndTime())
                 .isWalkingSession(request.getIsWalkingSession())
+                .distance(request.getDistance())
                 .build();
     }
 
@@ -27,6 +28,7 @@ public class StepsTrackingMapper {
                 .startTime(entity.getStartTime())
                 .endTime(entity.getEndTime())
                 .isWalkingSession(entity.getIsWalkingSession())
+                .distance(entity.getDistance())
                 .build();
     }
 

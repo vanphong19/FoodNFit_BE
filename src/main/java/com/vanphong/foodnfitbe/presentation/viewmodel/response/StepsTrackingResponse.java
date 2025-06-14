@@ -22,4 +22,5 @@ public class StepsTrackingResponse {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Boolean isWalkingSession;
+    private Float distance;
 }
