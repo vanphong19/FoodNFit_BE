@@ -10,6 +10,7 @@ import com.vanphong.foodnfitbe.exception.NotFoundException;
 import com.vanphong.foodnfitbe.presentation.mapper.UserMapper;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserSearchCriteria;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserRequest;
+import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserUpdateRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.UserResponse;
 import com.vanphong.foodnfitbe.utils.CurrentUser;
 import org.springframework.data.domain.Page;
@@ -78,7 +79,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updateUser(UUID id, UserRequest userRequest) {
+    public UserResponse updateUser(UUID id, UserUpdateRequest userRequest) {
         Users user = userRepository.findUser(id).orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
         // Log lịch sử trước khi thay đổi
         userHistoryRepository.save(UserHistory.builder()
@@ -100,9 +101,7 @@ public class UserServiceImpl implements UserService {
         user.setAvatarUrl(userRequest.getAvatarUrl());
         user.setGender(userRequest.isGender());
         user.setUpdatedDate(LocalDate.now());
-        if (userRequest.getPassword() != null && !userRequest.getPassword().isBlank()) {
-            user.setPasswordHash(passwordEncoder.encode(userRequest.getPassword()));
-        }
+        user.setBirthday(userRequest.getBirthday());
         return userMapper.toResponse(userRepository.saveUser(user));
     }
 

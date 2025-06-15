@@ -4,6 +4,7 @@ import com.vanphong.foodnfitbe.domain.entity.Exercise;
 import com.vanphong.foodnfitbe.domain.entity.UserHistory;
 import com.vanphong.foodnfitbe.domain.entity.Users;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserRequest;
+import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserUpdateRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.ExerciseResponse;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.UserHistoryResponse;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.UserResponse;

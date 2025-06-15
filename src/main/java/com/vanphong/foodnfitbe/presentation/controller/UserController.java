@@ -4,6 +4,7 @@ import com.vanphong.foodnfitbe.application.service.UserService;
 import com.vanphong.foodnfitbe.domain.entity.Users;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserSearchCriteria;
+import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserUpdateRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -56,7 +57,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<UserResponse> update(@PathVariable UUID id, @RequestBody UserRequest request) {
+    public ResponseEntity<UserResponse> update(@PathVariable UUID id, @RequestBody UserUpdateRequest request) {
         UserResponse response = userService.updateUser(id, request);
         return ResponseEntity.ok(response);
     }
