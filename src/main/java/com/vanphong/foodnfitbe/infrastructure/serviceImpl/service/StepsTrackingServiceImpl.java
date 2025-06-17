@@ -8,6 +8,7 @@ import com.vanphong.foodnfitbe.domain.repository.UserRepository;
 import com.vanphong.foodnfitbe.exception.NotFoundException;
 import com.vanphong.foodnfitbe.presentation.mapper.StepsTrackingMapper;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.StepsTrackingRequest;
+import com.vanphong.foodnfitbe.presentation.viewmodel.response.HourlyStepSummary;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.StepSummary;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.StepsTrackingResponse;
 import com.vanphong.foodnfitbe.utils.CurrentUser;
@@ -19,9 +20,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -74,5 +75,50 @@ public class StepsTrackingServiceImpl implements StepsTrackingService {
                 public Float getTotalDistance() { return 0f; }
             };
         }
+    }
+
+    @Override
+    public List<HourlyStepSummary> getHourlyStepsForToday() {
+        // Lấy thời gian bắt đầu và kết thúc của ngày hiện tại
+        ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh");
+        LocalDate today = LocalDate.now(zoneId);
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+
+        UUID userId = currentUser.getCurrentUserId();
+        List<StepsTracking> todayRecords = stepsTrackingRepository
+                .findByUserIdAndTimeRange(userId, startOfDay, endOfDay);
+
+        // Nhóm theo giờ và tính tổng
+        Map<Integer, List<StepsTracking>> recordsByHour = todayRecords.stream()
+                .collect(Collectors.groupingBy(this::getHourFromRecord));
+
+        // Tạo danh sách kết quả cho tất cả 24 giờ
+        List<HourlyStepSummary> result = new ArrayList<>();
+        for (int hour = 0; hour < 24; hour++) {
+            List<StepsTracking> hourRecords = recordsByHour.getOrDefault(hour, List.of());
+
+            long totalSteps = hourRecords.stream()
+                    .mapToLong(record -> record.getStepsCount() != null ? record.getStepsCount() : 0)
+                    .sum();
+
+            float totalDistance = (float) hourRecords.stream()
+                    .mapToDouble(record -> record.getDistance() != null ? record.getDistance() : 0.0)
+                    .sum();
+
+            int sessionCount = hourRecords.size();
+
+            result.add(new HourlyStepSummary(hour, totalSteps, totalDistance, sessionCount));
+        }
+
+        return result;
+    }
+
+    private int getHourFromRecord(StepsTracking record) {
+        // Ưu tiên startTime, nếu null thì dùng endTime
+        LocalDateTime timeToUse = record.getStartTime() != null
+                ? record.getStartTime()
+                : record.getEndTime();
+        return timeToUse != null ? timeToUse.getHour() : 0;
     }
 }

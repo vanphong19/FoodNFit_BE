@@ -27,7 +27,7 @@ public class WorkoutExercise {
     private Integer sets;
     @Column(name = "reps")
     private Integer reps;
-    @Column(name = "rest_time_second")
+    @Column(name = "rest_time_seconds")
     private Integer restTimeSecond;
     @Column(name = "calories_burnt")
     private Double caloriesBurnt;

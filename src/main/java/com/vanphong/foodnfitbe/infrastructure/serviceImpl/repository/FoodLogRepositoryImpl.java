@@ -4,6 +4,7 @@ import com.vanphong.foodnfitbe.domain.entity.FoodLog;
 import com.vanphong.foodnfitbe.domain.repository.FoodLogRepository;
 import com.vanphong.foodnfitbe.infrastructure.jpaRepository.FoodLogJpaRepository;
 import com.vanphong.foodnfitbe.infrastructure.jpaRepository.FoodTypeJpaRepository;
+import com.vanphong.foodnfitbe.presentation.viewmodel.response.NutritionDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -39,5 +40,10 @@ public class FoodLogRepositoryImpl implements FoodLogRepository {
     @Override
     public List<FoodLog> findByUserIdAndDate(UUID userId, LocalDate date) {
         return foodLogJpaRepository.findByUserIdAndDate(userId, date);
+    }
+
+    @Override
+    public NutritionDto getNutritionStats(UUID userId, LocalDate date) {
+        return foodLogJpaRepository.getNutritionStats(userId, date);
     }
 }

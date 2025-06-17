@@ -1,6 +1,7 @@
 package com.vanphong.foodnfitbe.domain.repository;
 
 import com.vanphong.foodnfitbe.domain.entity.FoodLog;
+import com.vanphong.foodnfitbe.presentation.viewmodel.response.NutritionDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,4 +14,5 @@ public interface FoodLogRepository {
      List<FoodLog> findAll();
      void delete(FoodLog foodLog);
      List<FoodLog> findByUserIdAndDate(UUID userId, LocalDate date);
+     NutritionDto getNutritionStats(UUID userId, LocalDate date);
 }

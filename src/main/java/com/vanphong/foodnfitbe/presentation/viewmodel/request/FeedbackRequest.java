@@ -12,4 +12,5 @@ public class FeedbackRequest {
     private String message;
     private String purpose;
     private String inquiry;
+    private String imageUrl;
 }

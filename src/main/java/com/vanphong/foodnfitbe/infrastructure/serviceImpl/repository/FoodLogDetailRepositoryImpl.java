@@ -26,4 +26,9 @@ public class FoodLogDetailRepositoryImpl implements FoodLogDetailRepository {
     public Optional<FoodLogDetail> findById(Integer id) {
         return foodLogDetailJpaRepository.findById(id);
     }
+
+    @Override
+    public void deleteByLogId(Integer logId) {
+        foodLogDetailJpaRepository.deleteByLogId(logId);
+    }
 }

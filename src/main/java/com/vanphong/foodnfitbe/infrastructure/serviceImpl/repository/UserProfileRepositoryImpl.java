@@ -16,7 +16,7 @@ public class UserProfileRepositoryImpl implements UserProfileRepository {
 
     @Override
     public Optional<UserProfiles> getLatestByUserID(UUID userId) {
-        return userProfileJpaRepository.findTopByUserIdOrderByCreatedAtDesc(userId);
+        return userProfileJpaRepository.getLatestByUserID(userId);
     }
 
     @Override
@@ -27,5 +27,10 @@ public class UserProfileRepositoryImpl implements UserProfileRepository {
     @Override
     public List<UserProfiles> findAll() {
         return userProfileJpaRepository.findAll();
+    }
+
+    @Override
+    public Double getLatestTDEE(UUID userID) {
+        return userProfileJpaRepository.getLatestTDEE(userID);
     }
 }

@@ -45,12 +45,18 @@ public class UserProfileServiceImpl implements UserProfileService {
             }
         }
 
+        Float height = userProfileRequest.getHeight();
+        Float weight = userProfileRequest.getWeight();
+
+        Float bmi = weight / ((height * height) / 100000);
+
         UserProfiles userProfiles = UserProfiles.builder()
                 .user(user)
                 .height(userProfileRequest.getHeight())
                 .weight(userProfileRequest.getWeight())
-                .tdee(userProfileRequest.getTdee())
                 .mealGoal(userProfileRequest.getMealGoal())
+                .tdee(userProfileRequest.getTdee())
+                .bmi(bmi)
                 .exerciseGoal(userProfileRequest.getExerciseGoal())
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -66,7 +72,8 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    public UserProfileResponse findByUserId(UUID userId) {
+    public UserProfileResponse findByUserId() {
+        UUID userId = currentUser.getCurrentUserId();
         Optional<UserProfiles> userProfiles = userProfileRepository.getLatestByUserID(userId);
 
         if(userProfiles.isEmpty()){

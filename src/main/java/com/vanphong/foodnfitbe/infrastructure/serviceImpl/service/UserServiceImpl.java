@@ -3,16 +3,18 @@ package com.vanphong.foodnfitbe.infrastructure.serviceImpl.service;
 import com.vanphong.foodnfitbe.application.service.UserService;
 import com.vanphong.foodnfitbe.domain.entity.UserHistory;
 import com.vanphong.foodnfitbe.domain.entity.Users;
-import com.vanphong.foodnfitbe.domain.repository.UserHistoryRepository;
-import com.vanphong.foodnfitbe.domain.repository.UserRepository;
+import com.vanphong.foodnfitbe.domain.repository.*;
 import com.vanphong.foodnfitbe.domain.specification.UserSpecification;
 import com.vanphong.foodnfitbe.exception.NotFoundException;
 import com.vanphong.foodnfitbe.presentation.mapper.UserMapper;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserSearchCriteria;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserUpdateRequest;
+import com.vanphong.foodnfitbe.presentation.viewmodel.response.NutritionDto;
+import com.vanphong.foodnfitbe.presentation.viewmodel.response.UserDailyStatsDto;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.UserResponse;
 import com.vanphong.foodnfitbe.utils.CurrentUser;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -30,19 +32,26 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final UserHistoryRepository userHistoryRepository;
     private final CurrentUser currentUser;
+    private final FoodLogRepository logRepository;
+    private final WorkoutPlanRepository workoutPlanRepository;
+    private final UserProfileRepository userProfileRepository;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, UserHistoryRepository userHistoryRepository, CurrentUser currentUser) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, UserHistoryRepository userHistoryRepository, CurrentUser currentUser, FoodLogRepository logRepository, WorkoutPlanRepository workoutPlanRepository, UserProfileRepository userProfileRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.userHistoryRepository = userHistoryRepository;
         this.currentUser = currentUser;
+        this.logRepository = logRepository;
+        this.workoutPlanRepository = workoutPlanRepository;
+        this.userProfileRepository = userProfileRepository;
     }
 
 
@@ -196,6 +205,24 @@ public class UserServiceImpl implements UserService {
         LocalDate endOfMonth = thisMonth.atEndOfMonth();
 
         return userRepository.countUsersByMonth(startOfMonth, endOfMonth);
+    }
+
+    @Override
+    public UserDailyStatsDto getUserDailyStats() {
+        UUID userId = currentUser.getCurrentUserId();
+        LocalDate today = LocalDate.now();
+        NutritionDto nutrition = logRepository.getNutritionStats(userId, today);
+        Double caloriesOut = workoutPlanRepository.getCaloriesOut(userId, today);
+        Double TDEE = userProfileRepository.getLatestTDEE(userId);
+
+        return new UserDailyStatsDto(
+                nutrition.calories().doubleValue(),
+                nutrition.protein().doubleValue(),
+                nutrition.carbs().doubleValue(),
+                nutrition.fat().doubleValue(),
+                caloriesOut,
+                TDEE
+        );
     }
 
     public String getFullname() {

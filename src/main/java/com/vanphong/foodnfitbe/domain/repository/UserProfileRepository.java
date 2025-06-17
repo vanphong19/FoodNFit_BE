@@ -10,4 +10,5 @@ public interface UserProfileRepository {
     Optional<UserProfiles> getLatestByUserID(UUID userId);
     UserProfiles save(UserProfiles userProfiles);
     List<UserProfiles> findAll();
+    Double getLatestTDEE(UUID userID);
 }

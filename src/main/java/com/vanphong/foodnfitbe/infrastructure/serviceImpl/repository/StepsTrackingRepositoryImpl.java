@@ -30,4 +30,9 @@ public class StepsTrackingRepositoryImpl implements StepsTrackingRepository {
     public Optional<StepSummary> getTodaySummary(UUID userId, LocalDateTime startOfDay, LocalDateTime endOfDay) {
         return stepsTrackingJpaRepository.getTodaySummary(userId, startOfDay, endOfDay);
     }
+
+    @Override
+    public List<StepsTracking> findByUserIdAndTimeRange(UUID userId, LocalDateTime startTime, LocalDateTime endTime) {
+        return stepsTrackingJpaRepository.findByUserIdAndTimeRange(userId, startTime, endTime);
+    }
 }

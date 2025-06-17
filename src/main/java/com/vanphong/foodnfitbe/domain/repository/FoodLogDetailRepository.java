@@ -8,4 +8,5 @@ public interface FoodLogDetailRepository {
     FoodLogDetail save(FoodLogDetail foodLogDetail);
     void delete(Integer id);
     Optional<FoodLogDetail> findById(Integer id);
+    void deleteByLogId(Integer logId);
 }

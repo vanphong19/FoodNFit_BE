@@ -34,4 +34,6 @@ public class UserProfiles {
     private String exerciseGoal;
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+    @Column(name = "bmi")
+    private Float bmi;
 }

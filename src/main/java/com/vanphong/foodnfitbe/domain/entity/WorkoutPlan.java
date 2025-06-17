@@ -3,7 +3,9 @@ package com.vanphong.foodnfitbe.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "workout_plan")
@@ -22,5 +24,10 @@ public class WorkoutPlan {
     @Column(name = "exercise_count")
     private Integer exerciseCount;
     @Column(name = "plan_date")
-    private LocalDateTime planDate;
+    private LocalDate planDate;
+    @Column(name = "total_calories_burnt")
+    private Double totalCaloriesBurnt;
+
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
+    private List<WorkoutExercise> exercises;
 }

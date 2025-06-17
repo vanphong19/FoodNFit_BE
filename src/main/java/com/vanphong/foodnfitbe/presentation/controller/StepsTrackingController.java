@@ -3,6 +3,7 @@ package com.vanphong.foodnfitbe.presentation.controller;
 import com.vanphong.foodnfitbe.application.service.StepsTrackingService;
 import com.vanphong.foodnfitbe.domain.entity.StepsTracking;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.StepsTrackingRequest;
+import com.vanphong.foodnfitbe.presentation.viewmodel.response.HourlyStepSummary;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.StepSummary;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.StepsTrackingResponse;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +35,13 @@ public class StepsTrackingController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(summary);
+    }
+    @GetMapping("hourly")
+    public ResponseEntity<List<HourlyStepSummary>> getHourlySummary() {
+        List<HourlyStepSummary> summaries = stepsTrackingService.getHourlyStepsForToday();
+        if (summaries == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(summaries);
     }
 }

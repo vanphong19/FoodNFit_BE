@@ -25,7 +25,7 @@ public class FoodLogDetailServiceImpl implements FoodLogDetailService {
     @Override
     public void saveAll(FoodLogDetailBatchRequest request) {
         FoodLog log = foodLogRepository.findById(request.getLogId()).orElseThrow(() -> new RuntimeException("FoodLog not found"));
-
+        foodLogDetailRepository.deleteByLogId(log.getId());
         for(FoodLogDetailRequest dto: request.getDetails()){
             FoodItem foodItem = foodItemRepository.findById(dto.getFoodId()).orElseThrow(() -> new RuntimeException("FoodItem not found"));
 

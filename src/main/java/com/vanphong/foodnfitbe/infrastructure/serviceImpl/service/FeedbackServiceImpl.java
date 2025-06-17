@@ -35,6 +35,8 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .message(feedbackRequest.getMessage())
                 .inquiry(feedbackRequest.getInquiry())
                 .purpose(feedbackRequest.getPurpose())
+                .imageUrl(feedbackRequest.getImageUrl())
+                .status(false)
                 .submittedAt(LocalDateTime.now())
                 .build();
         feedbackRepository.save(savedFeedback);

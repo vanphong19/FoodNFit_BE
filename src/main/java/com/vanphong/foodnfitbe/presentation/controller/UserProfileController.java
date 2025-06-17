@@ -5,10 +5,7 @@ import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserProfileRequest
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.UserProfileResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user-profile")
@@ -16,8 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserProfileController {
     private final UserProfileService userProfileService;
     @PostMapping("/create")
-    public ResponseEntity<UserProfileResponse> create(@RequestBody UserProfileRequest userProfileRequest) {
+    public ResponseEntity<String> create(@RequestBody UserProfileRequest userProfileRequest) {
         UserProfileResponse userProfileResponse = userProfileService.createUserProfile(userProfileRequest);
-        return ResponseEntity.ok(userProfileResponse);
+        return ResponseEntity.ok("Create user profile successfully");
+    }
+    @GetMapping("/getLatest")
+    public ResponseEntity<UserProfileResponse> getLatest() {
+        UserProfileResponse response = userProfileService.findByUserId();
+        return ResponseEntity.ok(response);
     }
 }

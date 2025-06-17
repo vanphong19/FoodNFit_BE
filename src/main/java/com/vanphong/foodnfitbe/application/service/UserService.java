@@ -3,6 +3,7 @@ package com.vanphong.foodnfitbe.application.service;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserSearchCriteria;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserUpdateRequest;
+import com.vanphong.foodnfitbe.presentation.viewmodel.response.UserDailyStatsDto;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.UserResponse;
 import org.springframework.data.domain.Page;
 
@@ -18,4 +19,5 @@ public interface UserService {
     Long countUsersCreateAtLastMonth();
     Long countUsers();
     Long countUsersCreateAtThisMonth();
+    UserDailyStatsDto getUserDailyStats();
 }

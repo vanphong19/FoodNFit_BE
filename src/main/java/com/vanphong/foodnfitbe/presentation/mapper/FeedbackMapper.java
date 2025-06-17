@@ -17,6 +17,8 @@ public class FeedbackMapper {
                 .purpose(request.getPurpose())
                 .inquiry(request.getInquiry())
                 .submittedAt(LocalDateTime.now())
+                .status(false)
+                .imageUrl(request.getImageUrl())
                 .build();
     }
 
@@ -28,6 +30,8 @@ public class FeedbackMapper {
                 .purpose(feedback.getPurpose())
                 .inquiry(feedback.getInquiry())
                 .submittedAt(feedback.getSubmittedAt())
+                .status(feedback.getStatus())
+                .imageUrl(feedback.getImageUrl())
                 .build();
     }
 

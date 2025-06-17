@@ -7,5 +7,5 @@ import java.util.UUID;
 
 public interface UserProfileService {
     UserProfileResponse createUserProfile(UserProfileRequest userProfileRequest);
-    UserProfileResponse findByUserId(UUID userId);
+    UserProfileResponse findByUserId();
 }

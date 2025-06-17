@@ -24,4 +24,6 @@ public class FeedbackResponse {
     private String purpose;
     private String inquiry;
     private LocalDateTime submittedAt;
+    private String imageUrl;
+    private Boolean status;
 }

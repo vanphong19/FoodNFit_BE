@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -31,5 +32,5 @@ public class AnswerFeedback {
     @Column(name = "answer")
     private String answer;
     @Column(name = "responded_at")
-    private String respondedAt;
+    private LocalDateTime respondedAt;
 }

@@ -35,4 +35,8 @@ public class Feedback {
 
     @Column(name = "inquiry", columnDefinition = "text")
     private String inquiry;
+    @Column(name = "status")
+    private Boolean status;
+    @Column(name = "image_url")
+    private String imageUrl;
 }

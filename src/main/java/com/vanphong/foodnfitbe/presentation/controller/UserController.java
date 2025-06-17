@@ -5,6 +5,7 @@ import com.vanphong.foodnfitbe.domain.entity.Users;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserSearchCriteria;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserUpdateRequest;
+import com.vanphong.foodnfitbe.presentation.viewmodel.response.UserDailyStatsDto;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -86,5 +87,9 @@ public class UserController {
     public ResponseEntity<Long> getCountUserThisMonth() {
         Long count = userService.countUsersCreateAtThisMonth();
         return ResponseEntity.ok(count);
+    }
+    @GetMapping("/stats-today")
+    public ResponseEntity<UserDailyStatsDto> getUserStatsToday() {
+        return ResponseEntity.ok(userService.getUserDailyStats());
     }
 }
