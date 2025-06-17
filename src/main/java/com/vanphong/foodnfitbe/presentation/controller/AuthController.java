@@ -251,7 +251,7 @@ public class AuthController {
         String action = "changePassword";
 
         try {
-            if (!requestBody.newPassword().equals(requestBody.confirmNewPassword())) {
+            if (!requestBody.getNewPassword().equals(requestBody.getConfirmNewPassword())) {
                 logErrorResponse(HttpStatus.BAD_REQUEST, "New password and confirmation do not match", null);
                 return ResponseEntity.badRequest().body("Mật khẩu mới không khớp");
             }
@@ -261,7 +261,7 @@ public class AuthController {
 
             logRequest(email, traceId, clientIp, endpoint, httpMethod, action);
 
-            authService.changePassword(email, requestBody.oldPassword(), requestBody.newPassword());
+            authService.changePassword(email, requestBody.getOldPassword(), requestBody.getNewPassword());
             logResponse(HttpStatus.OK, "Password changed successfully", "email", email);
             return ResponseEntity.ok("Đổi mật khẩu thành công");
         } catch (Exception e) {

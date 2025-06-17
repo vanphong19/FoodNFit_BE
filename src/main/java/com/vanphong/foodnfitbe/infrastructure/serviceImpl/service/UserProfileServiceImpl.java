@@ -48,7 +48,8 @@ public class UserProfileServiceImpl implements UserProfileService {
         Float height = userProfileRequest.getHeight();
         Float weight = userProfileRequest.getWeight();
 
-        Float bmi = weight / ((height * height) / 100000);
+        Float heightInMeters = height / 100f;
+        Float bmi = weight / (heightInMeters * heightInMeters);
 
         UserProfiles userProfiles = UserProfiles.builder()
                 .user(user)
