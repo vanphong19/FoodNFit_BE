@@ -5,5 +5,8 @@ public record UserDailyStatsDto( Double caloriesIn,
                                  Double carbs,
                                  Double fat,
                                  Double caloriesOut,
-                                 Double tdee) {
+                                 Double tdee,
+                                 Double targetCarbs,
+                                 Double targetProtein,
+                                 Double targetFat) {
 }

@@ -1,6 +1,7 @@
 package com.vanphong.foodnfitbe.infrastructure.serviceImpl.service;
 
 import com.vanphong.foodnfitbe.application.service.UserService;
+import com.vanphong.foodnfitbe.domain.entity.UserGoal;
 import com.vanphong.foodnfitbe.domain.entity.UserHistory;
 import com.vanphong.foodnfitbe.domain.entity.Users;
 import com.vanphong.foodnfitbe.domain.repository.*;
@@ -12,6 +13,7 @@ import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.UserUpdateRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.NutritionDto;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.UserDailyStatsDto;
+import com.vanphong.foodnfitbe.presentation.viewmodel.response.UserGoalResponse;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.UserResponse;
 import com.vanphong.foodnfitbe.utils.CurrentUser;
 import jakarta.transaction.Transactional;
@@ -42,8 +44,9 @@ public class    UserServiceImpl implements UserService {
     private final FoodLogRepository logRepository;
     private final WorkoutPlanRepository workoutPlanRepository;
     private final UserProfileRepository userProfileRepository;
+    private final UserGoalRepository userGoalRepository;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, UserHistoryRepository userHistoryRepository, CurrentUser currentUser, FoodLogRepository logRepository, WorkoutPlanRepository workoutPlanRepository, UserProfileRepository userProfileRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, UserHistoryRepository userHistoryRepository, CurrentUser currentUser, FoodLogRepository logRepository, WorkoutPlanRepository workoutPlanRepository, UserProfileRepository userProfileRepository, UserGoalRepository userGoalRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
@@ -52,6 +55,7 @@ public class    UserServiceImpl implements UserService {
         this.logRepository = logRepository;
         this.workoutPlanRepository = workoutPlanRepository;
         this.userProfileRepository = userProfileRepository;
+        this.userGoalRepository = userGoalRepository;
     }
 
 
@@ -214,14 +218,18 @@ public class    UserServiceImpl implements UserService {
         NutritionDto nutrition = logRepository.getNutritionStats(userId, today);
         Double caloriesOut = workoutPlanRepository.getCaloriesOut(userId, today);
         Double TDEE = userProfileRepository.getLatestTDEE(userId);
+        UserGoal response = userGoalRepository.findLatest().orElseThrow(() -> new RuntimeException("User goal not found"));
 
         return new UserDailyStatsDto(
-                nutrition.calories().doubleValue(),
-                nutrition.protein().doubleValue(),
-                nutrition.carbs().doubleValue(),
-                nutrition.fat().doubleValue(),
-                caloriesOut,
-                TDEE
+                roundToInt(nutrition.calories().doubleValue()),
+                roundToInt(nutrition.protein().doubleValue()),
+                roundToInt(nutrition.carbs().doubleValue()),
+                roundToInt(nutrition.fat().doubleValue()),
+                roundToInt(caloriesOut),
+                roundToInt(TDEE),
+                roundToInt(response.getTargetCarbs()),
+                roundToInt(response.getTargetProtein()),
+                roundToInt(response.getTargetFat())
         );
     }
 
@@ -231,5 +239,10 @@ public class    UserServiceImpl implements UserService {
             throw new NotFoundException("không tìm thấy user");
         }
         return updater.get().getFullname();
+    }
+
+    private double roundToInt(Double value) {
+        if (value == null) return 0.0;
+        return Math.round(value);
     }
 }
