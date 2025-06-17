@@ -9,8 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserProfileJpaRepository extends JpaRepository<UserProfiles, UUID> {
-    @Query("SELECT p FROM UserProfiles p JOIN FETCH p.user WHERE p.user.id = :userId ORDER BY p.createdAt DESC")
-    Optional<UserProfiles> getLatestByUserID(UUID userId);
+    Optional<UserProfiles> findTopByUser_IdOrderByCreatedAtDesc(UUID userId);
 
     @Query("""
     SELECT COALESCE(p.tdee, 0)

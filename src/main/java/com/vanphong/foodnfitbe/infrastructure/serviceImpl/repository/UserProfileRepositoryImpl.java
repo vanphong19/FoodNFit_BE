@@ -16,7 +16,7 @@ public class UserProfileRepositoryImpl implements UserProfileRepository {
 
     @Override
     public Optional<UserProfiles> getLatestByUserID(UUID userId) {
-        return userProfileJpaRepository.getLatestByUserID(userId);
+        return userProfileJpaRepository.findTopByUser_IdOrderByCreatedAtDesc(userId);
     }
 
     @Override
