@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 @Repository
@@ -36,5 +37,15 @@ public class WorkoutPlanRepositoryImpl implements WorkoutPlanRepository {
     @Override
     public void delete(WorkoutPlan workoutPlan) {
         workoutPlanJpaRepository.delete(workoutPlan);
+    }
+
+    @Override
+    public List<WorkoutPlan> findByUserIdAndDateRange(UUID userId, LocalDate startDate, LocalDate endDate) {
+        return workoutPlanJpaRepository.findByUser_IdAndPlanDateBetween(userId, startDate, endDate);
+    }
+
+    @Override
+    public List<Object[]> findFavoriteExercisesByUserAndDateRange(UUID userId, LocalDate startDate, LocalDate endDate) {
+        return workoutPlanJpaRepository.findFavoriteExercisesByUserAndDateRange(userId, startDate, endDate);
     }
 }

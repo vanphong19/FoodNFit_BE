@@ -26,4 +26,5 @@ public interface FoodLogJpaRepository extends JpaRepository<FoodLog, Integer> {
 """)
     NutritionDto getNutritionStats(@Param("userId") UUID userId, @Param("date") LocalDate date);
 
+    List<FoodLog> findByUser_IdAndDateBetweenOrderByDateAsc(UUID user_id, LocalDate date, LocalDate date2);
 }

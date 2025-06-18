@@ -2,6 +2,7 @@ package com.vanphong.foodnfitbe.application.service;
 
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.FoodLogRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.FoodLogResponse;
+import com.vanphong.foodnfitbe.presentation.viewmodel.response.WeeklyNutritionResponse;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,4 +13,5 @@ public interface FoodLogService {
     void delete(Integer id);
     List<FoodLogResponse> getAllFoodLogsByDay(LocalDate day);
     FoodLogResponse getFoodLogById(Integer id);
+    WeeklyNutritionResponse getWeeklySummary(LocalDate date);
 }

@@ -4,6 +4,7 @@ import com.vanphong.foodnfitbe.application.service.FoodLogService;
 import com.vanphong.foodnfitbe.domain.entity.FoodLog;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.FoodLogRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.FoodLogResponse;
+import com.vanphong.foodnfitbe.presentation.viewmodel.response.WeeklyNutritionResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -42,5 +43,12 @@ public class FoodLogController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate parsedDay = LocalDate.parse(day, formatter);
         return ResponseEntity.ok(foodLogService.getAllFoodLogsByDay(parsedDay));
+    }
+    @GetMapping("/weekly-summary")
+    public ResponseEntity<WeeklyNutritionResponse> getWeeklySummary(
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+
+        WeeklyNutritionResponse response = foodLogService.getWeeklySummary(date);
+        return ResponseEntity.ok(response);
     }
 }

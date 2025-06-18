@@ -15,4 +15,5 @@ public interface FoodLogRepository {
      void delete(FoodLog foodLog);
      List<FoodLog> findByUserIdAndDate(UUID userId, LocalDate date);
      NutritionDto getNutritionStats(UUID userId, LocalDate date);
+     List<FoodLog> findByUserIdAndDateBetween(UUID userId, LocalDate startDate, LocalDate endDate);
 }

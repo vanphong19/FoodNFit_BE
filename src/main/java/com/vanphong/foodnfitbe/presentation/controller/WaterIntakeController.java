@@ -15,13 +15,13 @@ public class WaterIntakeController {
     private final WaterIntakeService waterIntakeService;
     private final WaterIntakeMapper waterIntakeMapper;
 
-    @PostMapping("update")
+    @PostMapping("/update")
     public ResponseEntity<String> updateWaterCups(@RequestParam("cups") int cups) {
         waterIntakeService.addWaterCups(cups);
         return ResponseEntity.ok("Cập nhật số ly nước thành công");
     }
     @GetMapping("/today")
-    public ResponseEntity<WaterIntakeResponse> getTodayWaterIntake() {
+        public ResponseEntity<WaterIntakeResponse> getTodayWaterIntake() {
         WaterIntake intake = waterIntakeService.getWaterCups();
         return ResponseEntity.ok(waterIntakeMapper.toResponse(intake));
     }

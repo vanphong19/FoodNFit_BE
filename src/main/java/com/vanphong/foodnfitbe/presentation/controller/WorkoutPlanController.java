@@ -3,9 +3,11 @@ package com.vanphong.foodnfitbe.presentation.controller;
 import com.vanphong.foodnfitbe.application.service.WorkoutPlanService;
 import com.vanphong.foodnfitbe.domain.entity.WorkoutPlan;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.WorkoutPlanRequest;
+import com.vanphong.foodnfitbe.presentation.viewmodel.response.WeeklyExerciseSummaryResponse;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.WorkoutPlanResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,5 +39,20 @@ public class WorkoutPlanController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate parsedDay = LocalDate.parse(date, formatter);
         return ResponseEntity.ok(workoutPlanService.getByDate(parsedDay));
+    }
+
+    @GetMapping("/weekly-summary")
+    public ResponseEntity<WeeklyExerciseSummaryResponse> getWeeklySummary(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+
+        WeeklyExerciseSummaryResponse summary = workoutPlanService.getWeeklyExerciseSummary(date);
+        return ResponseEntity.ok(summary);
+    }
+
+    @GetMapping("/weekly-summary/current")
+    public ResponseEntity<WeeklyExerciseSummaryResponse> getCurrentWeeklySummary() {
+        LocalDate currentDate = LocalDate.now();
+        WeeklyExerciseSummaryResponse summary = workoutPlanService.getWeeklyExerciseSummary(currentDate);
+        return ResponseEntity.ok(summary);
     }
 }

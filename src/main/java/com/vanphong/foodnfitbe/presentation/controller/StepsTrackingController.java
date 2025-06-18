@@ -23,7 +23,7 @@ public class StepsTrackingController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("getAll")
+    @GetMapping("/getAll")
     public ResponseEntity<List<StepsTrackingResponse>> getAll() {
         List<StepsTrackingResponse> list = stepsTrackingService.getStepsTrackingList();
         return ResponseEntity.ok(list);
@@ -36,7 +36,7 @@ public class StepsTrackingController {
         }
         return ResponseEntity.ok(summary);
     }
-    @GetMapping("hourly")
+    @GetMapping("/hourly")
     public ResponseEntity<List<HourlyStepSummary>> getHourlySummary() {
         List<HourlyStepSummary> summaries = stepsTrackingService.getHourlyStepsForToday();
         if (summaries == null) {

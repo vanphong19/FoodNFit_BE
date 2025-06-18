@@ -62,18 +62,18 @@ public class ExerciseController {
         return exerciseResponse.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-    @GetMapping("search")
+    @GetMapping("/search")
     public ResponseEntity<List<ExerciseResponse>> search(@RequestParam String keyword) {
         List<ExerciseResponse> response = exerciseService.searchExercise(keyword);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("count")
+    @GetMapping("/count")
     public ResponseEntity<Long> count() {
         return ResponseEntity.ok(exerciseService.countExercises());
     }
 
-    @GetMapping("count-this-month")
+    @GetMapping("/count-this-month")
     public ResponseEntity<Long> countThisMonth() {
         return ResponseEntity.ok(exerciseService.countExerciseCreatedAThisMonth());
     }

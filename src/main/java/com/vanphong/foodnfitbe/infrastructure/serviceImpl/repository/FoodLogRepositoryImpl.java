@@ -46,4 +46,9 @@ public class FoodLogRepositoryImpl implements FoodLogRepository {
     public NutritionDto getNutritionStats(UUID userId, LocalDate date) {
         return foodLogJpaRepository.getNutritionStats(userId, date);
     }
+
+    @Override
+    public List<FoodLog> findByUserIdAndDateBetween(UUID userId, LocalDate startDate, LocalDate endDate) {
+        return foodLogJpaRepository.findByUser_IdAndDateBetweenOrderByDateAsc(userId, startDate, endDate);
+    }
 }

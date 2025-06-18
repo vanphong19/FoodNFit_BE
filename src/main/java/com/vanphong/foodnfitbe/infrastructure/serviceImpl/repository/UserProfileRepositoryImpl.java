@@ -6,6 +6,7 @@ import com.vanphong.foodnfitbe.infrastructure.jpaRepository.UserProfileJpaReposi
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,5 +33,10 @@ public class UserProfileRepositoryImpl implements UserProfileRepository {
     @Override
     public Double getLatestTDEE(UUID userID) {
         return userProfileJpaRepository.getLatestTDEE(userID);
+    }
+
+    @Override
+    public List<UserProfiles> findByUserIdAndDateRange(UUID userId, LocalDateTime startDate, LocalDateTime endDate) {
+        return userProfileJpaRepository.findByUser_IdAndCreatedAtBetweenOrderByCreatedAtAsc(userId, startDate, endDate);
     }
 }
