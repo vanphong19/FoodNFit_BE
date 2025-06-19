@@ -33,7 +33,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     private final StepsTrackingRepository stepsTrackingRepository;
 
     @Override
-    public WorkoutPlanResponse create(WorkoutPlanRequest request) {
+    public WorkoutPlanCreateResponse create(WorkoutPlanRequest request) {
         UUID userId = currentUser.getCurrentUserId();
         Users user = userRepository.findUser(userId)
                 .orElseThrow(() -> new NotFoundException("User not found"));
@@ -52,7 +52,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
         plan.setTotalCaloriesBurnt(request.getTotalCaloriesBurnt());
 
         WorkoutPlan saved = workoutPlanRepository.save(plan);
-        return workoutPlanMapper.toResponse(saved);
+        return workoutPlanMapper.toCreateResponse(saved);
     }
 
     @Override

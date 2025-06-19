@@ -4,6 +4,7 @@ import com.vanphong.foodnfitbe.application.service.WorkoutPlanService;
 import com.vanphong.foodnfitbe.domain.entity.WorkoutPlan;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.WorkoutPlanRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.WeeklyExerciseSummaryResponse;
+import com.vanphong.foodnfitbe.presentation.viewmodel.response.WorkoutPlanCreateResponse;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.WorkoutPlanResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
@@ -20,8 +21,8 @@ import java.time.format.DateTimeFormatter;
 public class WorkoutPlanController {
     private final WorkoutPlanService workoutPlanService;
     @PostMapping("/create")
-    public ResponseEntity<WorkoutPlanResponse> createWorkoutPlan(@RequestBody WorkoutPlanRequest workoutPlanRequest) {
-        WorkoutPlanResponse response = workoutPlanService.create(workoutPlanRequest);
+    public ResponseEntity<WorkoutPlanCreateResponse> createWorkoutPlan(@RequestBody WorkoutPlanRequest workoutPlanRequest) {
+        WorkoutPlanCreateResponse response = workoutPlanService.create(workoutPlanRequest);
         return ResponseEntity.ok(response);
     }
     @PutMapping("/update/{id}")
