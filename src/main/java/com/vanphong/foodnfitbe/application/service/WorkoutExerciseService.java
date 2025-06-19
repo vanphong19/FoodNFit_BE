@@ -6,5 +6,5 @@ import com.vanphong.foodnfitbe.presentation.viewmodel.request.WorkoutExerciseBat
 public interface WorkoutExerciseService {
     void saveAll(WorkoutExerciseBatchRequest request);
     void delete(Integer id);
-    WorkoutExercise changeStatus(Integer id);
+    void changeStatus(Integer id);
 }

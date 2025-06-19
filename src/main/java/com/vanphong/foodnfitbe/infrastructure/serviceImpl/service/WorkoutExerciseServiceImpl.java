@@ -58,7 +58,7 @@ public class WorkoutExerciseServiceImpl implements WorkoutExerciseService {
     }
 
     @Override
-    public WorkoutExercise changeStatus(Integer id) {
+    public void     changeStatus(Integer id) {
         Optional<WorkoutExercise> workoutExercise = workoutExerciseRepository.findById(id);
         if (workoutExercise.isEmpty()) {
             throw new NotFoundException("Workout exercise not found");
@@ -66,6 +66,5 @@ public class WorkoutExerciseServiceImpl implements WorkoutExerciseService {
 
         WorkoutExercise exercise = workoutExercise.get();
         exercise.setIsCompleted(true);
-        return workoutExerciseRepository.save(exercise);
     }
 }

@@ -23,12 +23,9 @@ public class WorkoutExerciseController {
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * Đánh dấu một bài tập là đã hoàn thành
-     */
     @PutMapping("/complete/{id}")
-    public ResponseEntity<WorkoutExercise> complete(@PathVariable Integer id) {
-        WorkoutExercise updated = workoutExerciseService.changeStatus(id);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<String> complete(@PathVariable Integer id) {
+        workoutExerciseService.changeStatus(id);
+        return ResponseEntity.ok("updated successfully");
     }
 }
