@@ -20,7 +20,7 @@ import org.checkerframework.checker.units.qual.A;
 public class WorkoutExerciseResponse {
      Integer id;
 
-     Integer exerciseId;
+     String exerciseName;
 
      Integer planId;
 

@@ -4,6 +4,7 @@ import com.vanphong.foodnfitbe.application.service.WorkoutPlanService;
 import com.vanphong.foodnfitbe.domain.entity.WorkoutPlan;
 import com.vanphong.foodnfitbe.presentation.viewmodel.request.WorkoutPlanRequest;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.WeeklyExerciseSummaryResponse;
+import com.vanphong.foodnfitbe.presentation.viewmodel.response.WorkoutPlanByDate;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.WorkoutPlanCreateResponse;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.WorkoutPlanResponse;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class WorkoutPlanController {
         return ResponseEntity.ok("Deleted workout plan successfully.");
     }
     @GetMapping("/getByDate")
-    public ResponseEntity<WorkoutPlanResponse> getWorkoutPlanByDate(@RequestParam String date) {
+    public ResponseEntity<WorkoutPlanByDate> getWorkoutPlanByDate(@RequestParam String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate parsedDay = LocalDate.parse(date, formatter);
         return ResponseEntity.ok(workoutPlanService.getByDate(parsedDay));

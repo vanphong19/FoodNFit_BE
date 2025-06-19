@@ -74,10 +74,10 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     }
 
     @Override
-    public WorkoutPlanResponse getByDate(LocalDate date) {
+    public WorkoutPlanByDate getByDate(LocalDate date) {
         UUID id = currentUser.getCurrentUserId();
         WorkoutPlan plan = workoutPlanRepository.findByUserAndDate(id, date).orElseThrow(() -> new NotFoundException("Workout not found"));
-        return workoutPlanMapper.toResponse(plan);
+        return workoutPlanMapper.toWorkoutPlanByDate(plan);
     }
 
     @Override
