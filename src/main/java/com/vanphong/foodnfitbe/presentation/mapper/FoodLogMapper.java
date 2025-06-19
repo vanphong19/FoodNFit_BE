@@ -8,7 +8,9 @@ import com.vanphong.foodnfitbe.presentation.viewmodel.response.FoodLogResponse;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -25,7 +27,9 @@ public class FoodLogMapper {
     }
 
     public FoodLogResponse toResponse(FoodLog log) {
-        List<FoodLogDetailResponse> detailResponses = log.getDetails().stream()
+        List<FoodLogDetailResponse> detailResponses = Optional.ofNullable(log.getDetails())
+                .orElse(Collections.emptyList()) // nếu null thì dùng list rỗng
+                .stream()
                 .map(detail -> new FoodLogDetailResponse(
                         detail.getId(),
                         detail.getFoodItem().getId(),
@@ -36,7 +40,8 @@ public class FoodLogMapper {
                         detail.getCarbs(),
                         detail.getProtein(),
                         detail.getFat()
-                )).collect(Collectors.toList());
+                ))
+                .collect(Collectors.toList());
 
         FoodLogResponse response = new FoodLogResponse();
         response.setId(log.getId());

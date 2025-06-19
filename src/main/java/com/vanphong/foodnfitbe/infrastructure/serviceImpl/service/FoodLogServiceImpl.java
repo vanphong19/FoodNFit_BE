@@ -45,6 +45,7 @@ public class FoodLogServiceImpl implements FoodLogService {
                 .totalCarbs(foodLogRequest.getTotalCarbs())
                 .totalProtein(foodLogRequest.getTotalProtein())
                 .totalFat(foodLogRequest.getTotalFat())
+                .details(new ArrayList<>())
                 .build();
 
         FoodLog saved = foodLogRepository.save(foodLog);
