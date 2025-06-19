@@ -34,23 +34,32 @@ public class FoodLogServiceImpl implements FoodLogService {
     private final FoodLogMapper foodLogMapper;
     private final FoodLogDetailRepository foodLogDetailRepository;
     @Override
-    public FoodLogResponse createFoodLog(FoodLogRequest foodLogRequest) {
+    public FoodLogResponse createFoodLog(FoodLogRequest request) {
         UUID userId = currentUser.getCurrentUserId();
         Users user = userRepository.findUser(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        FoodLog foodLog = FoodLog.builder()
-                .user(user)
-                .meal(foodLogRequest.getMeal())
-                .date(LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh")))
-                .totalCalories(foodLogRequest.getTotalCalories())
-                .totalCarbs(foodLogRequest.getTotalCarbs())
-                .totalProtein(foodLogRequest.getTotalProtein())
-                .totalFat(foodLogRequest.getTotalFat())
-                .details(new ArrayList<>())
-                .build();
+
+        LocalDate today = LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        String meal = request.getMeal().toUpperCase();
+
+        FoodLog foodLog = foodLogRepository
+                .findByUserIdAndDateAndMeal(userId, today, meal)
+                .orElseGet(() -> FoodLog.builder()
+                        .user(user)
+                        .meal(meal)
+                        .date(today)
+                        .details(new ArrayList<>())
+                        .build()
+                );
+
+        foodLog.setTotalCalories(request.getTotalCalories());
+        foodLog.setTotalProtein(request.getTotalProtein());
+        foodLog.setTotalFat(request.getTotalFat());
+        foodLog.setTotalCarbs(request.getTotalCarbs());
 
         FoodLog saved = foodLogRepository.save(foodLog);
         return foodLogMapper.toResponse(saved);
     }
+
 
     @Override
     public FoodLogResponse update(Integer id, FoodLogRequest foodLogRequest) {

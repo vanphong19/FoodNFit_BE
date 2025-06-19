@@ -51,4 +51,9 @@ public class FoodLogRepositoryImpl implements FoodLogRepository {
     public List<FoodLog> findByUserIdAndDateBetween(UUID userId, LocalDate startDate, LocalDate endDate) {
         return foodLogJpaRepository.findByUser_IdAndDateBetweenOrderByDateAsc(userId, startDate, endDate);
     }
+
+    @Override
+    public Optional<FoodLog> findByUserIdAndDateAndMeal(UUID userId, LocalDate date, String meal) {
+        return foodLogJpaRepository.findByUser_IdAndDateAndMeal(userId, date, meal);
+    }
 }

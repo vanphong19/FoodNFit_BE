@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface FoodLogJpaRepository extends JpaRepository<FoodLog, Integer> {
@@ -27,4 +28,6 @@ public interface FoodLogJpaRepository extends JpaRepository<FoodLog, Integer> {
     NutritionDto getNutritionStats(@Param("userId") UUID userId, @Param("date") LocalDate date);
 
     List<FoodLog> findByUser_IdAndDateBetweenOrderByDateAsc(UUID user_id, LocalDate date, LocalDate date2);
+
+    Optional<FoodLog> findByUser_IdAndDateAndMeal(UUID userId, LocalDate date, String meal);
 }
