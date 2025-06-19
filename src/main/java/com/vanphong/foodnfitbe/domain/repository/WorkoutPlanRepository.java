@@ -15,4 +15,6 @@ public interface WorkoutPlanRepository {
     void delete(WorkoutPlan workoutPlan);
     List<WorkoutPlan> findByUserIdAndDateRange(UUID userId, LocalDate startDate, LocalDate endDate);
     List<Object[]> findFavoriteExercisesByUserAndDateRange(UUID userId, LocalDate startDate, LocalDate endDate);
+
+    Optional<WorkoutPlan> findByUserIdAndPlanDate(UUID userId, LocalDate today);
 }

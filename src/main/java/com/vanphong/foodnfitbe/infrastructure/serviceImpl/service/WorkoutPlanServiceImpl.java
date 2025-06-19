@@ -16,10 +16,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.function.Function;
@@ -38,15 +35,24 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     @Override
     public WorkoutPlanResponse create(WorkoutPlanRequest request) {
         UUID userId = currentUser.getCurrentUserId();
-        Users user = userRepository.findUser(userId).orElseThrow(() -> new NotFoundException("User not found"));
-        WorkoutPlan plan = WorkoutPlan.builder()
-                .user(user)
-                .totalCaloriesBurnt(request.getTotalCaloriesBurnt())
-                .planDate(LocalDate.now())
-                .exerciseCount(request.getExerciseCount())
-                .build();
-        WorkoutPlan savedPlan = workoutPlanRepository.save(plan);
-        return workoutPlanMapper.toResponse(savedPlan);
+        Users user = userRepository.findUser(userId)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        LocalDate today = LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+
+        WorkoutPlan plan = workoutPlanRepository.findByUserIdAndPlanDate(userId, today)
+                .orElseGet(() -> WorkoutPlan.builder()
+                        .user(user)
+                        .planDate(today)
+                        .exercises(new ArrayList<>())
+                        .build()
+                );
+
+        plan.setExerciseCount(request.getExerciseCount());
+        plan.setTotalCaloriesBurnt(request.getTotalCaloriesBurnt());
+
+        WorkoutPlan saved = workoutPlanRepository.save(plan);
+        return workoutPlanMapper.toResponse(saved);
     }
 
     @Override

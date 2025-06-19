@@ -32,4 +32,6 @@ public interface WorkoutPlanJpaRepository extends JpaRepository<WorkoutPlan, Int
     List<Object[]> findFavoriteExercisesByUserAndDateRange(@Param("userId") UUID userId,
                                                            @Param("startDate") LocalDate startDate,
                                                            @Param("endDate") LocalDate endDate);
+
+    Optional<WorkoutPlan> findByUser_IdAndPlanDate(UUID userId, LocalDate date);
 }

@@ -48,4 +48,9 @@ public class WorkoutPlanRepositoryImpl implements WorkoutPlanRepository {
     public List<Object[]> findFavoriteExercisesByUserAndDateRange(UUID userId, LocalDate startDate, LocalDate endDate) {
         return workoutPlanJpaRepository.findFavoriteExercisesByUserAndDateRange(userId, startDate, endDate);
     }
+
+    @Override
+    public Optional<WorkoutPlan> findByUserIdAndPlanDate(UUID userId, LocalDate today) {
+        return workoutPlanJpaRepository.findByUser_IdAndPlanDate(userId, today);
+    }
 }

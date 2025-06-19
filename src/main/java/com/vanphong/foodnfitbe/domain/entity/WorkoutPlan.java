@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,5 +30,5 @@ public class WorkoutPlan {
     private Double totalCaloriesBurnt;
 
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
-    private List<WorkoutExercise> exercises;
+    private List<WorkoutExercise> exercises = new ArrayList<>();
 }
