@@ -21,6 +21,7 @@ public class WorkoutExerciseResponse {
      Integer id;
 
      String exerciseName;
+     Integer exerciseId;
 
      Integer planId;
 

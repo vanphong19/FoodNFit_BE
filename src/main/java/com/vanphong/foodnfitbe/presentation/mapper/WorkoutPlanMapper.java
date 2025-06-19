@@ -39,6 +39,7 @@ public class WorkoutPlanMapper {
                 .map(exercise -> WorkoutExerciseResponse.builder()
                         .id(exercise.getId())
                         .exerciseName(exercise.getExercise().getExerciseName()) // cần get từ bảng Exercise
+                        .exerciseId(exercise.getExercise().getId())
                         .planId(plan.getId())
                         .sets(exercise.getSets())
                         .reps(exercise.getReps())
