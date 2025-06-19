@@ -35,5 +35,5 @@ public class FoodLog {
     @Column(name = "meal")
     private String meal;
     @OneToMany(mappedBy = "log", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FoodLogDetail> details;
+    private List<FoodLogDetail> details = new ArrayList<>();
 }

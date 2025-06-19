@@ -6,10 +6,8 @@ import com.vanphong.foodnfitbe.domain.entity.FoodItem;
 import com.vanphong.foodnfitbe.domain.repository.FoodItemRepository;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.SpoonacularRecipeResponse;
 import com.vanphong.foodnfitbe.presentation.viewmodel.response.SpoonacularSearchResponse;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,13 +27,15 @@ public class SpoonacularService {
     private String baseUrl;
 
     private final FoodItemRepository foodItemRepository;
+    private final TranslateService translateService;
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private static final Logger log = LoggerFactory.getLogger(SpoonacularService.class);
 
-    public SpoonacularService(FoodItemRepository foodItemRepository) {
+    public SpoonacularService(FoodItemRepository foodItemRepository, TranslateService translateService) {
         this.foodItemRepository = foodItemRepository;
+        this.translateService = translateService;
         this.restTemplate = new RestTemplate();
         this.objectMapper = new ObjectMapper();
         this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -51,51 +50,69 @@ public class SpoonacularService {
         int batchSize = 100;
 
         // Từ khóa tìm kiếm tập trung vào món Việt Nam
+
+// Từ khóa tìm kiếm tập trung vào món Việt Nam - Chỉ những món đặc trưng
         String[] vietnameseKeywords = {
-                // Món phở và bún
-                "pho", "pho bo", "pho ga", "vietnamese pho", "beef pho", "chicken pho",
-                "bun", "bun bo hue", "bun rieu", "bun thit nuong", "bun cha", "bun bo nam bo",
-                "vermicelli", "vietnamese vermicelli", "rice noodles",
+                // Món phở - rất đặc trưng VN
+                "pho", "pho bo", "pho ga", "vietnamese pho", "vietnam pho",
 
-                // Cơm và các món cơm
-                "com tam", "broken rice", "vietnamese rice", "com suon", "com ga",
-                "fried rice vietnamese", "com chien", "sticky rice", "xoi",
+                // Món bún - đặc trưng VN
+                "bun bo hue", "bun rieu", "bun thit nuong", "bun cha", "bun bo nam bo",
+                "bun dau mam tom", "bun ca", "bun oc",
 
-                // Bánh mì và các loại bánh
-                "banh mi", "vietnamese sandwich", "banh xeo", "vietnamese pancake",
-                "banh cuon", "banh chung", "banh it", "vietnamese bread",
+                // Miến - với tên Việt
+                "mien ga", "mien luon", "mien cua", "vietnamese glass noodles",
 
-                // Gỏi cuốn và nem
-                "goi cuon", "spring rolls", "fresh spring rolls", "vietnamese spring rolls",
-                "nem", "cha gio", "fried spring rolls", "summer rolls",
+                // Hủ tiếu và các món mì đặc trưng
+                "hu tieu", "hu tieu nam vang", "mi quang", "cao lau",
 
-                // Miến và các món miến
-                "mien", "mien ga", "glass noodles", "vietnamese glass noodles",
-                "cellophane noodles", "bean thread noodles",
+                // Cơm tấm - đặc trưng VN
+                "com tam", "broken rice", "com tam suon",
 
-                // Canh và soup
-                "canh", "vietnamese soup", "canh chua", "sour soup",
-                "sup", "vietnamese broth",
+                // Xôi - đặc trưng VN
+                "xoi", "xoi man", "xoi gac", "vietnamese sticky rice",
 
-                // Chả cá và hải sản
-                "cha ca", "vietnamese fish", "tom", "shrimp vietnamese",
-                "cua", "vietnamese crab", "muc", "squid vietnamese",
+                // Bánh mì Việt Nam
+                "banh mi", "vietnamese sandwich", "vietnamese baguette",
 
-                // Thịt nướng và nướng
-                "thit nuong", "vietnamese grilled", "nem nuong", "grilled pork",
-                "bo nuong", "grilled beef", "vietnamese bbq",
+                // Bánh xèo và các bánh đặc trưng
+                "banh xeo", "vietnamese pancake", "banh khot", "banh cuon",
+                "banh chung", "banh tet", "banh it", "banh beo", "banh loc",
+                "banh canh", "banh uot",
 
-                // Chè và tráng miệng
-                "che", "vietnamese dessert", "sweet soup", "coconut dessert",
-                "flan vietnamese", "banh flan",
+                // Gỏi cuốn - rất đặc trưng VN
+                "goi cuon", "vietnamese fresh spring rolls", "vietnamese summer rolls",
 
-                // Nước chấm và gia vị
-                "nuoc mam", "fish sauce", "nuoc cham", "vietnamese dipping sauce",
-                "vietnamese sauce", "tamarind sauce",
+                // Chả giò/nem - đặc trưng VN
+                "cha gio", "nem ran", "vietnamese fried spring rolls",
+                "nem nuong", "nem chua", "nem lui",
+
+                // Canh chua - đặc trưng VN
+                "canh chua", "vietnamese sour soup", "canh chua ca",
+
+                // Chả cá Lã Vọng - đặc trưng Hà Nội
+                "cha ca", "cha ca la vong", "vietnamese grilled fish",
+
+                // Các món với nước mắm - đặc trưng VN
+                "nuoc mam", "vietnamese fish sauce", "nuoc cham",
+
+                // Chè - tráng miệng đặc trưng VN
+                "che", "che ba mau", "che dau xanh", "che troi nuoc", "vietnamese sweet soup",
+
+                // Bánh flan kiểu Việt
+                "banh flan", "vietnamese flan",
 
                 // Các món đặc trưng khác
-                "cao lau", "mi quang", "hu tieu", "bot chien", "banh trang",
-                "vietnamese noodle soup", "vietnamese street food"
+                "bo la lot", "vietnamese beef in betel leaves",
+                "thit kho", "vietnamese braised pork",
+                "ca kho to", "vietnamese braised fish",
+                "tom rang me", "vietnamese tamarind shrimp",
+                "goi ngo sen", "vietnamese lotus root salad",
+                "goi du du", "vietnamese green papaya salad",
+
+                // Từ khóa tổng quát nhưng an toàn
+                "vietnamese cuisine", "authentic vietnamese", "traditional vietnamese",
+                "vietnam recipe", "vietnamese dish"
         };
 
         // Cuisine types ưu tiên Việt Nam
@@ -103,9 +120,7 @@ public class SpoonacularService {
                 "vietnamese",     // Ưu tiên cao nhất
                 "vietnamese",     // Lặp lại để tăng tỷ lệ
                 "vietnamese",
-                "asian",          // Backup cho món châu Á tương đồng
-                "thai",           // Có một số món tương đồng
-                "chinese"         // Một số món gốc Hoa ảnh hưởng VN
+                        // Một số món gốc Hoa ảnh hưởng VN
         };
 
         // Types tập trung vào các loại món Việt thường gặp
@@ -305,12 +320,11 @@ public class SpoonacularService {
         }
 
         // Tạo serving size
-        if (recipe.getServings() != null && recipe.getReadyInMinutes() != null) {
-            foodItem.setServingSizeEn(String.format("Serves %d people, Ready in %d minutes",
-                    recipe.getServings(), recipe.getReadyInMinutes()));
+        if (recipe.getServings() != null) {
+            foodItem.setServingSizeEn(String.format("%d people", recipe.getServings()));
         }
 
-        // Tạo recipe từ instructions
+// Tạo recipe từ instructions
         if (recipe.getAnalyzedInstructions() != null && !recipe.getAnalyzedInstructions().isEmpty()) {
             StringBuilder recipeBuilder = new StringBuilder();
             for (SpoonacularRecipeResponse.Instruction instruction : recipe.getAnalyzedInstructions()) {
@@ -324,7 +338,7 @@ public class SpoonacularService {
             foodItem.setRecipeEn(recipeBuilder.toString().trim());
         }
 
-        // Tạo ingredients list
+// Tạo ingredients list
         if (recipe.getExtendedIngredients() != null) {
             String ingredients = recipe.getExtendedIngredients().stream()
                     .map(SpoonacularRecipeResponse.ExtendedIngredient::getOriginal)
@@ -332,10 +346,10 @@ public class SpoonacularService {
             foodItem.setIngredientsEn(ingredients);
         }
 
-        // Set default Vietnamese fields (có thể integrate với translation API sau)
-        foodItem.setNameVi(recipe.getTitle()); // Placeholder
-        foodItem.setRecipeVi(foodItem.getRecipeEn()); // Placeholder
-        foodItem.setServingSizeVi(foodItem.getServingSizeEn()); // Placeholder
+// Set default Vietnamese fields (có thể integrate với translation API sau)
+        foodItem.setNameVi(translateService.translateToVietnamese(recipe.getTitle()));
+        foodItem.setRecipeVi(translateService.translateToVietnamese(foodItem.getRecipeEn()));
+        foodItem.setServingSizeVi(translateService.translateToVietnamese(foodItem.getServingSizeEn()));
         foodItem.setCreatedDate(LocalDate.now());
 
         return foodItem;
