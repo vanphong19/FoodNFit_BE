@@ -26,6 +26,6 @@ public class ReminderRepositoryImpl implements ReminderRepository {
 
     @Override
     public List<Reminders> findAllByUserId(UUID userId) {
-        return reminderJpaRepository.findAllByUser_IdAndIsActiveTrue(userId);
+        return reminderJpaRepository.findAllByUser_IdAndIsActiveTrueOrderByScheduledTimeDesc(userId);
     }
 }

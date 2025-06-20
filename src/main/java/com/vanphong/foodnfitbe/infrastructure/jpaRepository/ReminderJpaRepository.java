@@ -13,5 +13,5 @@ public interface ReminderJpaRepository extends JpaRepository<Reminders, Integer>
     @Query("SELECT r FROM Reminders r WHERE r.isActive = false AND r.scheduledTime <= :now AND r.frequency = :frequency")
     List<Reminders> findDueReminders(@Param("now") LocalDateTime now, @Param("frequency") String frequency);
     Reminders findByScheduledTime(LocalDateTime scheduledTime);
-    List<Reminders> findAllByUser_IdAndIsActiveTrue(UUID user_id);
+    List<Reminders> findAllByUser_IdAndIsActiveTrueOrderByScheduledTimeDesc(UUID user_id);
 }
