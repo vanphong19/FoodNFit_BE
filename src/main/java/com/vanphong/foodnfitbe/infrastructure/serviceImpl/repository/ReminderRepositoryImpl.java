@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,5 +22,10 @@ public class ReminderRepositoryImpl implements ReminderRepository {
     @Override
     public Reminders findByScheduledTime(LocalDateTime scheduledTime) {
         return reminderJpaRepository.findByScheduledTime(scheduledTime);
+    }
+
+    @Override
+    public List<Reminders> findAllByUserId(UUID userId) {
+        return reminderJpaRepository.findAllByUser_IdAndIsActiveTrue(userId);
     }
 }

@@ -14,7 +14,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -32,5 +34,12 @@ public class ReminderServiceImpl implements ReminderService {
         reminders.setUser(users);
         Reminders saved = reminderRepository.save(reminders);
         return reminderMapper.toResponse(saved);
+    }
+
+    @Override
+    public List<ReminderResponse> getAllReminders() {
+        UUID userId = currentUser.getCurrentUserId();
+        List<Reminders> reminders = reminderRepository.findAllByUserId(userId);
+        return reminders.stream().map(reminderMapper::toResponse).collect(Collectors.toList());
     }
 }
