@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -27,5 +28,10 @@ public class ReminderRepositoryImpl implements ReminderRepository {
     @Override
     public List<Reminders> findAllByUserId(UUID userId) {
         return reminderJpaRepository.findAllByUser_IdAndIsActiveTrueOrderByScheduledTimeDesc(userId);
+    }
+
+    @Override
+    public Optional<Reminders> findById(Integer id) {
+        return reminderJpaRepository.findById(id);
     }
 }

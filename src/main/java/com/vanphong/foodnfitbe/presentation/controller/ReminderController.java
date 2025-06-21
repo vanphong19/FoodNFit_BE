@@ -25,4 +25,8 @@ public class ReminderController {
         List<ReminderResponse> reminders = reminderService.getAllReminders();
         return ResponseEntity.ok(reminders);
     }
+    @GetMapping("getById/{id}")
+    public ResponseEntity<ReminderResponse> getById(@PathVariable Integer id) {
+        return ResponseEntity.ok(reminderService.getReminderById(id));
+    }
 }

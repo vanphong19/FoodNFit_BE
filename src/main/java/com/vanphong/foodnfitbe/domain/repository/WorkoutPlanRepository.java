@@ -17,4 +17,5 @@ public interface WorkoutPlanRepository {
     List<Object[]> findFavoriteExercisesByUserAndDateRange(UUID userId, LocalDate startDate, LocalDate endDate);
 
     Optional<WorkoutPlan> findByUserIdAndPlanDate(UUID userId, LocalDate today);
+    List<Object[]> getTotalCaloriesBurntByDayLast7Days(UUID userId, LocalDate startDate);
 }

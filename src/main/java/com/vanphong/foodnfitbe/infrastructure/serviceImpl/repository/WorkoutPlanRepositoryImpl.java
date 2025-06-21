@@ -53,4 +53,9 @@ public class WorkoutPlanRepositoryImpl implements WorkoutPlanRepository {
     public Optional<WorkoutPlan> findByUserIdAndPlanDate(UUID userId, LocalDate today) {
         return workoutPlanJpaRepository.findByUser_IdAndPlanDate(userId, today);
     }
+
+    @Override
+    public List<Object[]> getTotalCaloriesBurntByDayLast7Days(UUID userId, LocalDate startDate) {
+        return workoutPlanJpaRepository.getTotalCaloriesBurntByDayLast7Days(userId, startDate);
+    }
 }

@@ -13,4 +13,5 @@ public interface StepsTrackingRepository {
     List<StepsTracking> getAll();
     Optional<StepSummary> getTodaySummary(UUID userId, LocalDateTime startOfDay, LocalDateTime endOfDay);
     List<StepsTracking> findByUserIdAndTimeRange(UUID userId, LocalDateTime startTime, LocalDateTime endTime);
+    List<StepsTracking> findStepsInLast7Days(UUID userId, LocalDateTime startOfDay);
 }

@@ -35,4 +35,9 @@ public class StepsTrackingRepositoryImpl implements StepsTrackingRepository {
     public List<StepsTracking> findByUserIdAndTimeRange(UUID userId, LocalDateTime startTime, LocalDateTime endTime) {
         return stepsTrackingJpaRepository.findByUserIdAndTimeRange(userId, startTime, endTime);
     }
+
+    @Override
+    public List<StepsTracking> findStepsInLast7Days(UUID userId, LocalDateTime startOfDay) {
+        return stepsTrackingJpaRepository.findStepsInLast7Days(userId, startOfDay);
+    }
 }

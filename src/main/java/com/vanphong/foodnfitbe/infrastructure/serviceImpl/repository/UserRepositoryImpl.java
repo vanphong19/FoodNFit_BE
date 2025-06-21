@@ -60,4 +60,9 @@ public class UserRepositoryImpl implements UserRepository {
     public Users saveAndFlush(Users user) {
         return userJpaRepository.saveAndFlush(user);
     }
+
+    @Override
+    public List<Users> findAllUsers() {
+        return userJpaRepository.findAllByActiveTrue();
+    }
 }

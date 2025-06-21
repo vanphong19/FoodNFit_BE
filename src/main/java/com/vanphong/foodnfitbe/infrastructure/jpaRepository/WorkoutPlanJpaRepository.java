@@ -34,4 +34,15 @@ public interface WorkoutPlanJpaRepository extends JpaRepository<WorkoutPlan, Int
                                                            @Param("endDate") LocalDate endDate);
 
     Optional<WorkoutPlan> findByUser_IdAndPlanDate(UUID userId, LocalDate date);
+        @Query("""
+        SELECT w.planDate, SUM(w.totalCaloriesBurnt)
+        FROM WorkoutPlan w
+        WHERE w.user.id = :userId AND w.planDate >= :startDate
+        GROUP BY w.planDate
+        ORDER BY w.planDate
+    """)
+    List<Object[]> getTotalCaloriesBurntByDayLast7Days(
+            @Param("userId") UUID userId,
+            @Param("startDate") LocalDate startDate
+    );
 }

@@ -56,4 +56,9 @@ public class FoodLogRepositoryImpl implements FoodLogRepository {
     public Optional<FoodLog> findByUserIdAndDateAndMeal(UUID userId, LocalDate date, String meal) {
         return foodLogJpaRepository.findByUser_IdAndDateAndMeal(userId, date, meal);
     }
+
+    @Override
+    public List<Object[]> getDailyNutritionSummaryLast7Days(UUID userId, LocalDate startDate) {
+        return foodLogJpaRepository.getDailyNutritionSummaryLast7Days(userId, startDate);
+    }
 }

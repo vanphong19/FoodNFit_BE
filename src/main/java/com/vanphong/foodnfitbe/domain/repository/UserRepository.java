@@ -21,4 +21,5 @@ public interface UserRepository {
     Long countUsersByMonth(LocalDate from, LocalDate to);
     Long countUsers();
     Users saveAndFlush(Users user);
+    List<Users> findAllUsers();
 }

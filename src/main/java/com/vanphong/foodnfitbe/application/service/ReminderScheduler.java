@@ -1,21 +1,32 @@
 package com.vanphong.foodnfitbe.application.service;
 
 import com.vanphong.foodnfitbe.domain.entity.Reminders;
+import com.vanphong.foodnfitbe.domain.entity.Users;
 import com.vanphong.foodnfitbe.domain.repository.ReminderRepository;
+import com.vanphong.foodnfitbe.domain.repository.UserRepository;
 import com.vanphong.foodnfitbe.infrastructure.jpaRepository.ReminderJpaRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
 public class ReminderScheduler {
     private final ReminderJpaRepository reminderJpaRepository;
     private final FcmService fcmService;
+    private final HealthAnalysisService healthAnalysisService;
+    private final UserRepository userRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(ReminderScheduler.class);
+
 
     @Scheduled(cron = "0 0 7 * * *")  // Mỗi ngày vào lúc 7:00 sáng
     public void dailyReminder() {
@@ -48,7 +59,7 @@ public class ReminderScheduler {
         }
     }
 
-    @Scheduled(cron = "0 0 7 * * MON")  // Mỗi thứ Hai vào lúc 7:00 sáng
+    @Scheduled(cron = "0 0 7 * * MON")
     public void weeklyReminder() {
         LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
         List<Reminders> list = reminderJpaRepository.findDueReminders(now, "weekly");
@@ -80,4 +91,34 @@ public class ReminderScheduler {
             reminderJpaRepository.save(reminder);  // Lưu trạng thái nhắc nhở
         }
     }
+
+    @Scheduled(cron = "0 0 7 * * MON", zone = "Asia/Ho_Chi_Minh")
+    public void weeklyHealthAnalysisJob() {
+        List<Users> users = userRepository.findAllUsers();
+        for (Users user : users) {
+            UUID userId = user.getId();
+            try {
+                healthAnalysisService.analyzeAndCreateReminder(userId);
+                logger.info("Tạo thành công reminder cho user " + userId);
+            } catch (Exception e) {
+                logger.error("Lỗi khi tạo reminder cho user " + userId, e);
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 0 8 * * MON", zone = "Asia/Ho_Chi_Minh")
+    public void sendWeeklyReminder() {
+        LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
+
+        List<Reminders> list = reminderJpaRepository.findDueReminders(now, "analyse");
+
+        for (Reminders reminder : list) {
+            fcmService.send(reminder);
+            reminder.setIsActive(true);
+            reminderJpaRepository.save(reminder);
+        }
+
+        System.out.println(">> Sent reminder at 8AM");
+    }
+
 }

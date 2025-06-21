@@ -15,4 +15,5 @@ import java.util.UUID;
 public interface UserJpaRepository extends JpaRepository<Users, UUID>, JpaSpecificationExecutor<Users> {
     Optional<Users> findByEmail(String email);
     Long countByCreatedDateBetweenAndActiveTrue(LocalDate from, LocalDate to);
+    List<Users> findAllByActiveTrue();
 }

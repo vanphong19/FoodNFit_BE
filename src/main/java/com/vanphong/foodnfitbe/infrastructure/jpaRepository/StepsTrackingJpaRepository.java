@@ -36,5 +36,13 @@ public interface StepsTrackingJpaRepository extends JpaRepository<StepsTracking,
             @Param("startTime") LocalDateTime startTime,
             @Param("endTime") LocalDateTime endTime
     );
+    @Query("""
+        SELECT s FROM StepsTracking s
+        WHERE s.user.id = :userId AND s.startTime >= :startDateTime
+    """)
+    List<StepsTracking> findStepsInLast7Days(
+            @Param("userId") UUID userId,
+            @Param("startDateTime") LocalDateTime startDateTime
+    );
 }
 

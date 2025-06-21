@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -41,5 +42,23 @@ public class ReminderServiceImpl implements ReminderService {
         UUID userId = currentUser.getCurrentUserId();
         List<Reminders> reminders = reminderRepository.findAllByUserId(userId);
         return reminders.stream().map(reminderMapper::toResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public void createReminderForUser(UUID userId, ReminderRequest request) {
+        Users users = userRepository.findUser(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        Reminders reminders = reminderMapper.toEntity(request);
+        reminders.setUser(users);
+        Reminders saved = reminderRepository.save(reminders);
+        reminderMapper.toResponse(saved);
+    }
+
+    @Override
+    public ReminderResponse getReminderById(Integer reminderId) {
+        Optional<Reminders> reminders = reminderRepository.findById(reminderId);
+        if(reminders.isEmpty()){
+            throw new NotFoundException("Reminder not found");
+        }
+        return reminderMapper.toResponse(reminders.get());
     }
 }

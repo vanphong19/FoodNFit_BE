@@ -5,10 +5,12 @@ import com.vanphong.foodnfitbe.presentation.viewmodel.response.WaterIntakeRespon
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface WaterIntakeRepository {
     Optional<WaterIntake> findByUserIdAndDate(UUID user_id, LocalDate date);
     WaterIntake save(WaterIntake waterIntake);
+    List<WaterIntake> findLast7DaysWaterIntakeByUserId(UUID user_id, LocalDate startDate);
 }

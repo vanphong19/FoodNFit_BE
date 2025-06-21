@@ -17,4 +17,5 @@ public interface FoodLogRepository {
      NutritionDto getNutritionStats(UUID userId, LocalDate date);
      List<FoodLog> findByUserIdAndDateBetween(UUID userId, LocalDate startDate, LocalDate endDate);
      Optional<FoodLog> findByUserIdAndDateAndMeal(UUID userId, LocalDate date, String meal);
+     List<Object[]> getDailyNutritionSummaryLast7Days(UUID userId, LocalDate startDate);
 }
